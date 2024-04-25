@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class AirConditionerDO {
     private Integer mode;
 
     /*
-    空调可以工作或停机检修：0表示可以工作、1停机检修
+    空调可以工作或停机检修：1表示可以工作、0停机检修
     */
     private Integer working;
 
@@ -50,5 +52,10 @@ public class AirConditionerDO {
     /*
     上一次操作时间
      */
-    private Long lastOperationTime;
+    private Long connectionTime;
+
+    /*
+    当前用户产生的费用
+     */
+    private BigDecimal currFee;
 }

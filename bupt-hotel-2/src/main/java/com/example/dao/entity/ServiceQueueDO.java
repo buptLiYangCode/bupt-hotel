@@ -16,10 +16,10 @@ public class ServiceQueueDO {
     /*
     空调编号
      */
-    private Long acNumber;
+    private String acNumber;
 
     /*
     空调获取中央空调连接的开始时间
      */
-    private Long requestTime;
+    private Long connectionTime;
 }

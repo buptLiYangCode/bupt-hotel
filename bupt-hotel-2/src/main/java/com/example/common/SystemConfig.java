@@ -10,7 +10,10 @@ import java.util.LinkedList;
  * 空调价表实体类(单例模式)
  */
 @Data
-public class AirConditionerConfig {
+public class SystemConfig {
+
+    private Integer maxConnections;
+    private Integer timeSplice;
     /*
     空调模式：0表示制冷、1制热
     */
@@ -44,15 +47,23 @@ public class AirConditionerConfig {
      */
     private LinkedList<HashMap<Integer, BigDecimal>> priceTable;
 
-    private static AirConditionerConfig instance;
+    private static SystemConfig instance;
 
-    private AirConditionerConfig() {
-        // 初始化默认值
+    private SystemConfig() {
+        maxConnections = 3;
+        timeSplice = 5;
+        mode = 0;
+        temperatureUpperBound = 30;
+        temperatureLowerBound = 20;
+        windSpeedUpperBound = 3;
+        windSpeedLowerBound = 1;
+        defaultTemperature = 26;
+        defaultWindSpeed = 1;
     }
 
-    public static synchronized AirConditionerConfig getInstance() {
+    public static synchronized SystemConfig getInstance() {
         if (instance == null) {
-            instance = new AirConditionerConfig();
+            instance = new SystemConfig();
         }
         return instance;
     }

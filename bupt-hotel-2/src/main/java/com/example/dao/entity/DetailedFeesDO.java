@@ -45,6 +45,6 @@ public class DetailedFeesDO {
     /*
     该段时间费用
      */
-    private BigDecimal billing;
+    private BigDecimal fee;
 
 }

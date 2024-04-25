@@ -31,7 +31,7 @@ public class UserDO {
     private String roomNumber;
 
     /** 入住时间 */
-    private Long checkIntegerime;
+    private Long checkInTime;
 
     /** 离开时间 */
     private Long checkOutTime;

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 public interface AirConditionerMapper {
 
     @Select("select * from t_air_conditioner where ac_number = #{acNumber}")
-    AirConditionerDO getAirConditioner(String acNumber);
+    AirConditionerDO get(String acNumber);
 
 
     void update(AirConditionerDO airConditionerDO);

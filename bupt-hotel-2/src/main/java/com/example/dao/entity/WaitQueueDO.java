@@ -2,6 +2,7 @@ package com.example.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @TableName("t_wait_queue")
 public class WaitQueueDO {
     /*
     空调编号
      */
-    private Long acNumber;
+    private String acNumber;
 
     /*
     空调风速

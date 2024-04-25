@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @TableName("t_room_reservation")
 public class RoomReservationDO {
     private String roomNumber;
-    private Long checkIntegerime;
+    private Long checkInTime;
     private Long checkOutTime;
 }
