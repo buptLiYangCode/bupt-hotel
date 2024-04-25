@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 设置空调参数、包括制冷、制热，风速上限
+ */
 @RestController
 @RequiredArgsConstructor
 public class AdminController {

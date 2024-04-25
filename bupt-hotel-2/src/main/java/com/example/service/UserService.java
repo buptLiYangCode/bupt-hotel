@@ -1,9 +1,9 @@
 package com.example.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.dao.entity.AirConditionerDO;
-import com.example.dto.req.UserAirConditionerReqDTO;
+public interface UserService {
+    void openOrClose(String acNumber);
 
-public interface UserService extends IService<AirConditionerDO> {
-    void updateAirConditionerStatus(UserAirConditionerReqDTO userAirConditionerReqDTO);
+    void updateTemperature(String acNumber, Integer targetTemperature);
+
+    void updateWindSpeed(String acNumber, Integer windSpeed);
 }

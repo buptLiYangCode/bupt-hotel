@@ -14,7 +14,7 @@ public class DetailFeesRespDTO {
     /*
     空调编号
     */
-    private Long airConditionerNumber;
+    private Long acNumber;
 
     /*
     空调风速

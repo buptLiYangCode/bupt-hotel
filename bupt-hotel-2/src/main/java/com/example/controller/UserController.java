@@ -20,9 +20,31 @@ public class UserController {
      * @return 后台返回操作结果
      */
     @PutMapping("/user/airConditioner/open-or-close")
-    public Result<Void> updateAirConditionerStatus(String acNumber) {
+    public Result<Void> openOrClose(@RequestParam String acNumber) {
         userService.openOrClose(acNumber);
         return Results.success();
     }
+
+    /**
+     * 旅客打开、关闭空调
+     * @return 后台返回操作结果
+     */
+    @PutMapping("/user/airConditioner/temperature")
+    public Result<Void> updateTemperature(@RequestParam String acNumber, @RequestParam Integer targetTemperature) {
+        userService.updateTemperature(acNumber, targetTemperature);
+        return Results.success();
+    }
+
+    /**
+     * 旅客打开、关闭空调
+     * @return 后台返回操作结果
+     */
+    @PutMapping("/user/airConditioner/wind-speed")
+    public Result<Void> updateWindSpeed(@RequestParam String acNumber, @RequestParam Integer windSpeed) {
+        userService.updateWindSpeed(acNumber, windSpeed);
+        return Results.success();
+    }
+
+
 
 }

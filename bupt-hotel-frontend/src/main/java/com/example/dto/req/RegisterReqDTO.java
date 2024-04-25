@@ -40,7 +40,7 @@ public class RegisterReqDTO {
     /*
     入住时间
      */
-    private Date checkInTime;
+    private Date checkIntegerime;
     /*
     退房时间
      */

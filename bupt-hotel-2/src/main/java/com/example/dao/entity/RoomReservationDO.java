@@ -1,5 +1,6 @@
-package com.example.dto.req;
+package com.example.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,19 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FrontendDetailFeesReqDTO {
-    /*
-    房间号
-     */
+@TableName("t_room_reservation")
+public class RoomReservationDO {
     private String roomNumber;
-
-    /*
-    入住时间
-     */
     private Long checkIntegerime;
-
-    /*
-    离开时间
-     */
-    private Long CheckOutTime;
+    private Long checkOutTime;
 }

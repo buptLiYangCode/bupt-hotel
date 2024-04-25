@@ -1,7 +1,18 @@
 package com.example.dao.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.dao.entity.RoomDO;
 
-public interface RoomMapper extends BaseMapper<RoomDO> {
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+public interface RoomMapper {
+    @Select("""
+            SELECT room_number
+            FROM t_room
+            WHERE room_type = #{roomType}
+            """)
+    List<String> selectAllRooms(Integer roomType);
 }
+

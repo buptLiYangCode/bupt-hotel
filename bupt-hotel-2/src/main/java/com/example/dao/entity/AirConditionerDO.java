@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +15,7 @@ public class AirConditionerDO {
     /*
     空调编号
      */
-    private Long airConditionerNumber;
+    private String acNumber;
 
     /*
     空调模式：0表示制冷、1制热
@@ -28,17 +25,17 @@ public class AirConditionerDO {
     /*
     空调可以工作或停机检修：0表示可以工作、1停机检修
     */
-    private Integer workable;
+    private Integer working;
 
     /*
-    空调状态【用户是否按下开关键】：0表示开启、1关闭、2没按开关键
+    空调打开或者关闭
     */
-    private Integer status;
+    private Boolean opening;
 
     /*
-    空调状态【出风口是否出风】：0表示与中央空调建立连接、1关闭与中央空调的连接
+
     */
-    private Integer realStatus;
+    private Boolean connecting;
 
     /*
     空调风速
@@ -48,29 +45,10 @@ public class AirConditionerDO {
     /*
     空调目标温度
     */
-    private Integer targetTemperature;
+    private Integer temperature;
 
-    /*
-    调温上限
-    */
-    private Integer upperBound;
-
-    /*
-    调温上限
-     */
-    private Integer lowerBound;
     /*
     上一次操作时间
      */
-    private Date lastOperationTime;
-
-    /*
-    当前用户产生的费用
-     */
-    private BigDecimal currFee;
-
-    /*
-    空调总费用
-     */
-    private BigDecimal totalFee;
+    private Long lastOperationTime;
 }

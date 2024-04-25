@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -13,16 +12,16 @@ import java.util.Date;
 @TableName("t_user")
 public class UserDO {
 
-    /** 旅客用户姓名 */
+    /** 旅客旅客姓名 */
     private String userName;
 
-    /** 用户年龄 */
-    private Integer age;
+    /** 旅客年龄 */
+    private Long age;
 
-    /** 用户性别 */
+    /** 旅客性别 */
     private String gender;
 
-    /** 用户身份证号 */
+    /** 旅客身份证号 */
     private String idCardNumber;
 
     /** 房间类型 */
@@ -32,8 +31,8 @@ public class UserDO {
     private String roomNumber;
 
     /** 入住时间 */
-    private Date checkInTime;
+    private Long checkIntegerime;
 
     /** 离开时间 */
-    private Date checkOutTime;
+    private Long checkOutTime;
 }

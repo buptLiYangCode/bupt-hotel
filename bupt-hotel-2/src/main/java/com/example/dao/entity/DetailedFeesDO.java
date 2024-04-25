@@ -2,24 +2,25 @@ package com.example.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
- * 空调费用详表，用户使用空调，发送一个请求【开关机、调温、调风速】，就结算上一次的请求。一条记录以空调编号、开始时间作为唯一标识。
+ * 空调费用详表，旅客使用空调，发送一个请求【开关机、调温、调风速】，就结算上一次的请求。一条记录以空调编号、开始时间作为唯一标识。
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @TableName("t_detailed_fees")
 public class DetailedFeesDO {
     /*
     空调编号
     */
-    private Long airConditionerNumber;
+    private String acNumber;
 
     /*
     空调风速
@@ -34,7 +35,7 @@ public class DetailedFeesDO {
     /*
     开始时间
      */
-    private Date startTime;
+    private Long startTime;
 
     /*
     分钟数

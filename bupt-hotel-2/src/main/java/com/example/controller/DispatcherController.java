@@ -2,9 +2,10 @@ package com.example.controller;
 
 import com.example.common.result.Result;
 import com.example.common.result.Results;
-import com.example.dto.req.AdminStartReqDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class DispatcherController {
      * 查询空闲资源个数
      */
     @GetMapping("/dispatcher/query")
-    public Result<Integer> queryFreeResources() {
+    public Result<Integereger> queryFreeResources() {
 
 
         return Results.success(null);

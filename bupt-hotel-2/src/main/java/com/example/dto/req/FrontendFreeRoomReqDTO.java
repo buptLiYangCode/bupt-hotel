@@ -4,24 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class FrontendFreeRoomReqDTO {
     /*
-    房间号
-     */
-    private String roomNumber;
+    房间类型：0-标准间，1-大床房
+    */
+    private Integer roomType;
 
     /*
     入住时间
      */
-    private Date checkInTime;
+    private Long checkIntegerime;
 
     /*
     离开时间
      */
-    private Date CheckOutTime;
+    private Long checkOutTime;
 }

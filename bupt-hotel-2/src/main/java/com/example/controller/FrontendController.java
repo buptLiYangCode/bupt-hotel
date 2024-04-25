@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ *
+ */
+
 @RestController
 @RequiredArgsConstructor
 public class FrontendController {
@@ -31,12 +35,13 @@ public class FrontendController {
     @GetMapping("/frontend/freeRoom")
     public Result<FrontendFreeRoomRespDTO> getFreeRoom(@RequestBody FrontendFreeRoomReqDTO freeRoomReqDTO) {
         FrontendFreeRoomRespDTO frontendFreeRoomRespDTO = frontendService.getFreeRoom(freeRoomReqDTO);
-        return Results.success(null);
+//        return frontendFreeRoomRespDTO;
+        return Results.success(frontendFreeRoomRespDTO);
     }
 
     /**
      * 后台将信息写入数据库
-     * @param frontendRegisterReqDTO 用户登记信息
+     * @param frontendRegisterReqDTO 旅客登记信息
      * @return 登记成功，后台返回【房间号 + 房间密码】给前台
      */
     @PostMapping("/frontend/register")
@@ -46,23 +51,23 @@ public class FrontendController {
     }
 
     /**
-     * 根据用户身份信息查询房费和空调费用
+     * 根据前台提供的旅客身份信息查询房费和空调费用
      * @param frontendSettleBillReqDTO 旅客姓名、身份证号、房间号、房间密码
      * @return 费用简洁单
      */
-    @GetMapping("/user/settle-bill")
+    @GetMapping("/frontend/bill")
     public Result<FrontendSettleBillRespDTO> settleBill(@RequestBody FrontendSettleBillReqDTO frontendSettleBillReqDTO) {
         FrontendSettleBillRespDTO frontendSettleBillRespDTO = frontendService.settleBill(frontendSettleBillReqDTO);
         return Results.success(null);
     }
 
     /**
-     * 查询用户住宿时间段内的空调详细计费记录
+     * 查询旅客住宿时间段内的空调详细计费记录
      *
      * @param frontendDetailFeesReqDTO 房间号、入住时间、离开时间
      * @return 空调费用详细单
      */
-    @GetMapping("/user/settle-bill")
+    @GetMapping("/frontend/ac-bill")
     public Result<FrontendDetailFeesRespDTO> getDetailFees(@RequestBody FrontendDetailFeesReqDTO frontendDetailFeesReqDTO) {
         FrontendDetailFeesRespDTO frontendDetailFeesRespDTO = frontendService.getDetailFees(frontendDetailFeesReqDTO);
         return Results.success(null);

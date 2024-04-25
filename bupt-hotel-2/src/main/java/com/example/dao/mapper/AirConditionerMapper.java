@@ -1,7 +1,15 @@
 package com.example.dao.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.dao.entity.AirConditionerDO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
-public interface AirConditionerMapper extends BaseMapper<AirConditionerDO> {
+@Mapper
+public interface AirConditionerMapper {
+
+    @Select("select * from t_air_conditioner where ac_number = #{acNumber}")
+    AirConditionerDO getAirConditioner(String acNumber);
+
+
+    void update(AirConditionerDO airConditionerDO);
 }

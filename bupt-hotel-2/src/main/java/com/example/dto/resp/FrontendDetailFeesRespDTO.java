@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +13,7 @@ public class FrontendDetailFeesRespDTO {
     /*
     空调编号
     */
-    private Long airConditionerNumber;
+    private Long acNumber;
 
     /*
     空调风速
@@ -29,7 +28,7 @@ public class FrontendDetailFeesRespDTO {
     /*
     开始时间
      */
-    private Date startTime;
+    private Long startTime;
 
     /*
     分钟数

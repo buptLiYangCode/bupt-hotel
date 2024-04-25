@@ -13,7 +13,7 @@ public class AdminQueryRespDTO {
     /*
     空调编号
      */
-    private Long airConditionerNumber;
+    private Long acNumber;
 
     /*
     空调模式：0表示制冷、1制热
@@ -31,7 +31,7 @@ public class AdminQueryRespDTO {
     private Integer temperature;
 
     /*
-    当前用户产生的费用
+    当前旅客产生的费用
      */
     private BigDecimal currFee;
 

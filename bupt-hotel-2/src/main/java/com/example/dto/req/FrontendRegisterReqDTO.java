@@ -41,9 +41,9 @@ public class FrontendRegisterReqDTO {
     /*
     入住时间
      */
-    private Date checkInTime;
+    private Long checkIntegerime;
     /*
     退房时间
      */
-    private Date checkOutTime;
+    private Long checkOutTime;
 }
