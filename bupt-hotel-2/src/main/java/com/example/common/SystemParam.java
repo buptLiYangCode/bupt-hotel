@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * 空调价表实体类(单例模式)
  */
 @Data
-public class SystemConfig {
+public class SystemParam {
 
     private Integer maxConnections;
     private Integer timeSplice;
@@ -47,9 +47,9 @@ public class SystemConfig {
      */
     private LinkedList<HashMap<Integer, BigDecimal>> priceTable;
 
-    private static SystemConfig instance;
+    private static SystemParam instance;
 
-    private SystemConfig() {
+    private SystemParam() {
         maxConnections = 3;
         timeSplice = 5;
         mode = 0;
@@ -61,9 +61,9 @@ public class SystemConfig {
         defaultWindSpeed = 1;
     }
 
-    public static synchronized SystemConfig getInstance() {
+    public static synchronized SystemParam getInstance() {
         if (instance == null) {
-            instance = new SystemConfig();
+            instance = new SystemParam();
         }
         return instance;
     }
