@@ -4,7 +4,7 @@ server.port:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.182.171:3306/bupt_hotel?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.182.217:3306/bupt_hotel?useSSL=false&serverTimezone=UTC
     username: root
     password: P@ssw0ld
 
