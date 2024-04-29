@@ -1,0 +1,37 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.mapper.AirConditionerMapper">
+    <update id="update" parameterType="com.example.dao.entity.AirConditionerDO">
+        UPDATE t_air_conditioner
+        <set>
+            <if test="acNumber != null">
+                ac_number = #{acNumber},
+            </if>
+            <if test="mode != null">
+                mode = #{mode},
+            </if>
+            <if test="workable != null">
+                workable = #{workable},
+            </if>
+            <if test="opening != null">
+                opening = #{opening},
+            </if>
+            <if test="connecting != null">
+                connecting = #{connecting},
+            </if>
+            <if test="windSpeed != null">
+                wind_speed = #{windSpeed},
+            </if>
+            <if test="temperature != null">
+                temperature = #{temperature},
+            </if>
+            <if test="connectionTime != null">
+                connection_time = #{connectionTime},
+            </if>
+            <if test="currFee != null">
+                curr_fee = #{currFee},
+            </if>
+        </set>
+        WHERE ac_number = #{acNumber}
+    </update>
+</mapper>

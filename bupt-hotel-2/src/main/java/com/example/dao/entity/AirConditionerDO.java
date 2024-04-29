@@ -27,7 +27,7 @@ public class AirConditionerDO {
     /*
     空调可以工作或停机检修：1表示可以工作、0停机检修
     */
-    private Integer working;
+    private Boolean workable;
 
     /*
     空调打开或者关闭

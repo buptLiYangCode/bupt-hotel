@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.example.common.SystemConfig;
+import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
 import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.WaitQueueDO;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final WaitingQueueMapper waitingQueueMapper;
     private final DetailedFeesMapper detailedFeesMapper;
     private final RunningQueueMapper runningQueueMapper;
-    private final SystemConfig systemConfig = SystemConfig.getInstance();
+    private final SystemParam systemParam = SystemParam.getInstance();
 
     @Override
     public void openOrClose(String acNumber) {
@@ -33,9 +33,10 @@ public class UserServiceImpl implements UserService {
         boolean isConnecting = airConditionerDO.getConnecting();
 
         AirConditionerDO newAirConditionerDO = AirConditionerDO.builder()
+                .acNumber(acNumber)
                 .opening(!isOpening)
-                .temperature(systemConfig.getDefaultTemperature())
-                .windSpeed(systemConfig.getDefaultWindSpeed())
+                .temperature(systemParam.getDefaultTemperature())
+                .windSpeed(systemParam.getDefaultWindSpeed())
                 .build();
         // 如果空调开着：需要关闭，计算费用，更新空调信息，释放资源
         if (isOpening) {
@@ -54,8 +55,8 @@ public class UserServiceImpl implements UserService {
         if (!isOpening) {
             WaitQueueDO waitQueueDO = WaitQueueDO.builder()
                     .acNumber(acNumber)
-                    .temperature(systemConfig.getDefaultTemperature())
-                    .windSpeed(systemConfig.getDefaultWindSpeed())
+                    .temperature(systemParam.getDefaultTemperature())
+                    .windSpeed(systemParam.getDefaultWindSpeed())
                     .requestTime(System.currentTimeMillis())
                     .build();
             waitingQueueMapper.insertRequest(waitQueueDO);
@@ -112,7 +113,7 @@ public class UserServiceImpl implements UserService {
         int lastTemperature = airConditionerDO.getTemperature();
         int lastWindSpeed = airConditionerDO.getWindSpeed();
         // 计算费用
-        LinkedList<HashMap<Integer, BigDecimal>> priceTable = systemConfig.getPriceTable();
+        LinkedList<HashMap<Integer, BigDecimal>> priceTable = systemParam.getPriceTable();
         BigDecimal pricePerMinute = priceTable.get(lastWindSpeed).get(lastTemperature);
         BigDecimal fee = pricePerMinute.multiply(BigDecimal.valueOf(minutes));
         return DetailedFeesDO.builder()
