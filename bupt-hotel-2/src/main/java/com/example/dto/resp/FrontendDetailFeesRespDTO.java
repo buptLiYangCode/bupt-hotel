@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,5 +36,5 @@ public class FrontendDetailFeesRespDTO {
     /*
     该段时间费用
      */
-    private BigDecimal billing;
+    private Double billing;
 }

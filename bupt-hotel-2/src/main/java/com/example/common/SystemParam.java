@@ -2,7 +2,6 @@ package com.example.common;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -12,8 +11,19 @@ import java.util.LinkedList;
 @Data
 public class SystemParam {
 
-    private Integer maxConnections;
-    private Integer timeSplice;
+    /*
+    中央空调最大连接计数
+     */
+    private Integer maxConnectionCount;
+    /*
+    中央空调当前连接计数
+    */
+    private Integer currConnectionCount;
+    /*
+    每次连接的最大时间ms
+     */
+    private Long timeSplice;
+
     /*
     空调模式：0表示制冷、1制热
     */
@@ -37,21 +47,26 @@ public class SystemParam {
     风速下限
      */
     private Integer windSpeedLowerBound;
-
+    /*
+    默认温度
+     */
     private Integer defaultTemperature;
-
+    /*
+    默认风速
+     */
     private Integer defaultWindSpeed;
 
     /*
     计价规则：每档风速: 每度温度：分钟价格
      */
-    private LinkedList<HashMap<Integer, BigDecimal>> priceTable;
+    private LinkedList<HashMap<Integer, Double>> priceTable;
 
     private static SystemParam instance;
 
     private SystemParam() {
-        maxConnections = 3;
-        timeSplice = 5;
+        maxConnectionCount = 3;
+        currConnectionCount = 0;
+        timeSplice = 5000L;
         mode = 0;
         temperatureUpperBound = 30;
         temperatureLowerBound = 20;
@@ -59,6 +74,45 @@ public class SystemParam {
         windSpeedLowerBound = 1;
         defaultTemperature = 26;
         defaultWindSpeed = 1;
+
+        priceTable = new LinkedList<>();
+        HashMap<Integer, Double> hashMap1 = new HashMap<>();
+        hashMap1.put(21, 0.21);
+        hashMap1.put(22, 0.22);
+        hashMap1.put(23, 0.23);
+        hashMap1.put(24, 0.24);
+        hashMap1.put(25, 0.25);
+        hashMap1.put(26, 0.26);
+        hashMap1.put(27, 0.27);
+        hashMap1.put(28, 0.28);
+        hashMap1.put(29, 0.29);
+        hashMap1.put(30, 0.30);
+        priceTable.add(hashMap1);
+        HashMap<Integer, Double> hashMap2 = new HashMap<>();
+        hashMap1.put(21, 0.21 * 2);
+        hashMap1.put(22, 0.22 * 2);
+        hashMap1.put(23, 0.23 * 2);
+        hashMap1.put(24, 0.24 * 2);
+        hashMap1.put(25, 0.25 * 2);
+        hashMap1.put(26, 0.26 * 2);
+        hashMap1.put(27, 0.27 * 2);
+        hashMap1.put(28, 0.28 * 2);
+        hashMap1.put(29, 0.29 * 2);
+        hashMap1.put(30, 0.30 * 2);
+        priceTable.add(hashMap2);
+        HashMap<Integer, Double> hashMap3 = new HashMap<>();
+        hashMap1.put(21, 0.21 * 3);
+        hashMap1.put(22, 0.22 * 3);
+        hashMap1.put(23, 0.23 * 3);
+        hashMap1.put(24, 0.24 * 3);
+        hashMap1.put(25, 0.25 * 3);
+        hashMap1.put(26, 0.26 * 3);
+        hashMap1.put(27, 0.27 * 3);
+        hashMap1.put(28, 0.28 * 3);
+        hashMap1.put(29, 0.29 * 3);
+        hashMap1.put(30, 0.30 * 3);
+        priceTable.add(hashMap3);
+        
     }
 
     public static synchronized SystemParam getInstance() {

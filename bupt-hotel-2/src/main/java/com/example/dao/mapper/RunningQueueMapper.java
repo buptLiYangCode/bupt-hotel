@@ -1,18 +1,21 @@
 package com.example.dao.mapper;
 
-import com.example.dao.entity.AirConditionerDO;
+import com.example.dao.entity.RunningQueueDO;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface RunningQueueMapper {
+    @Delete("delete from t_running_queue where ac_number = #{acNumber}")
     void delete(String acNumber);
 
-    void update(AirConditionerDO newAirConditionerDO);
+    @Insert("insert into t_running_queue (ac_number, connection_time) values (#{acNumber}, #{connectionTime})")
+    void insert(RunningQueueDO runningQueueDO);
 
-
-    int count();
-
-    void insert(String acNumber);
-
-    void getAll();
+    @Select("select * from t_running_queue")
+    List<RunningQueueDO> getAll();
 }

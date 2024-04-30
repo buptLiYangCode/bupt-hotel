@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@TableName("t_wait_queue")
-public class WaitQueueDO {
+@TableName("t_waiting_queue")
+public class WaitingQueueDO {
     /*
     空调编号
      */

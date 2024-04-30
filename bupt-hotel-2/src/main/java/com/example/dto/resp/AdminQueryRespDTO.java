@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,10 +31,10 @@ public class AdminQueryRespDTO {
     /*
     当前旅客产生的费用
      */
-    private BigDecimal currFee;
+    private Double currFee;
 
     /*
     空调总费用
      */
-    private BigDecimal totalFee;
+    private Double totalFee;
 }

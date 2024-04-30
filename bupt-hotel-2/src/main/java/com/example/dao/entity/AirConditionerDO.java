@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,7 +33,7 @@ public class AirConditionerDO {
     private Boolean opening;
 
     /*
-
+    该空调是否与中央空调建立连接
     */
     private Boolean connecting;
 
@@ -50,12 +48,12 @@ public class AirConditionerDO {
     private Integer temperature;
 
     /*
-    上一次操作时间
+    这个字段在 1.和中央空调建立连接 2.调温调风 两种情况下都会更新
      */
     private Long connectionTime;
 
     /*
     当前用户产生的费用
      */
-    private BigDecimal currFee;
+    private Double currFee;
 }
