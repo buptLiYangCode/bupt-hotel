@@ -20,7 +20,7 @@ public class DispatcherServiceImpl implements DispatcherService {
 
     @Override
     public int queryFreeResources() {
-        return runningQueueMapper.count();
+        return 0;
     }
 
     @Override
