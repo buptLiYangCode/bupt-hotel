@@ -17,8 +17,9 @@ public interface WaitingQueueMapper {
     @Delete("delete from t_waiting_queue where ac_number = #{acNumber}")
     void delete(String acNumber);
 
-    void update(WaitingQueueDO waitingQueueDO);
-
     @Select("select * from t_waiting_queue")
     List<WaitingQueueDO> getAll();
+
+    @Select("select * from t_waiting_queue where ac_number = #{acNumber}")
+    WaitingQueueDO select(String acNumber);
 }

@@ -2,9 +2,9 @@ package com.example.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 服务队列，正在运行空调的状态信息，调度员可以查看
@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_running_queue")
-@EnableScheduling
+@Builder
 public class RunningQueueDO {
     /*
     空调编号

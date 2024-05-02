@@ -1,10 +1,7 @@
 package com.example.dao.mapper;
 
 import com.example.dao.entity.RunningQueueDO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -18,4 +15,5 @@ public interface RunningQueueMapper {
 
     @Select("select * from t_running_queue")
     List<RunningQueueDO> getAll();
+
 }
