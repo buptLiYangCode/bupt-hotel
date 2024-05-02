@@ -3,7 +3,6 @@ package com.example.service.impl;
 import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
 import com.example.dao.entity.DetailedFeesDO;
-import com.example.dao.entity.RunningQueueDO;
 import com.example.dao.entity.WaitingQueueDO;
 import com.example.dao.mapper.AirConditionerMapper;
 import com.example.dao.mapper.DetailedFeesMapper;
@@ -48,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 // 释放资源，更新空调信息，系统当前连接数 -1
                 newAirConditionerDO.setConnecting(false);
                 systemParam.setCurrConnectionCount(systemParam.getCurrConnectionCount() - 1);
-                newAirConditionerDO.setCurrFee(airConditionerDO.getCurrFee()+newDetailedFeesDO.getFee());
+                newAirConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + newDetailedFeesDO.getFee());
                 runningQueueMapper.delete(acNumber);
             } else {
                 waitingQueueMapper.delete(acNumber);
@@ -70,7 +69,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 更新温度。
-     * @param acNumber 空调编号
+     *
+     * @param acNumber          空调编号
      * @param targetTemperature 目标温度
      */
     @Override
@@ -78,25 +78,32 @@ public class UserServiceImpl implements UserService {
         AirConditionerDO airConditionerDO = airConditionerMapper.get(acNumber);
         // 如果空调opening字段 = false
         if (!airConditionerDO.getOpening()) {
-            return ;
+            return;
         }
         long currentTime = System.currentTimeMillis();
-        AirConditionerDO newAirConditionerDO = AirConditionerDO.builder()
-                .acNumber(acNumber)
-                .temperature(targetTemperature)
-                // 调温调风时，也需要更新
-                .connectionTime(currentTime)
-                .build();
         if (airConditionerDO.getConnecting()) {
-            DetailedFeesDO newDetailedFeesDO = getDetailedFeesDO(airConditionerDO);
-            detailedFeesMapper.insert(newDetailedFeesDO);
-            newAirConditionerDO.setCurrFee(airConditionerDO.getCurrFee()+newDetailedFeesDO.getFee());
-            airConditionerMapper.update(newAirConditionerDO);
-            // 更新运行队列
-            RunningQueueDO runningQueueDO = new RunningQueueDO(acNumber, currentTime);
-            runningQueueMapper.update(runningQueueDO);
+            DetailedFeesDO detailedFeesDO = getDetailedFeesDO(airConditionerDO);
+            detailedFeesMapper.insert(detailedFeesDO);
+            airConditionerMapper.update(AirConditionerDO.builder()
+                    .acNumber(acNumber)
+                    .temperature(targetTemperature)
+                    // 调温调风时，也需要更新
+                    .connectionTime(currentTime)
+                    .currFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee())
+                    .build());
         } else {
-            waitingQueueMapper.update(newAirConditionerDO);
+            WaitingQueueDO newWaitingQueueDO = WaitingQueueDO.builder()
+                    .acNumber(acNumber)
+                    .windSpeed(systemParam.getDefaultWindSpeed())
+                    .temperature(targetTemperature)
+                    .requestTime(currentTime)
+                    .build();
+            WaitingQueueDO waitingQueueDO = waitingQueueMapper.select(acNumber);
+            if (waitingQueueDO != null) {
+                newWaitingQueueDO.setWindSpeed(waitingQueueDO.getWindSpeed());
+                newWaitingQueueDO.setRequestTime(waitingQueueDO.getRequestTime());
+            }
+            waitingQueueMapper.insert(waitingQueueDO);
         }
     }
 
@@ -105,27 +112,32 @@ public class UserServiceImpl implements UserService {
         AirConditionerDO airConditionerDO = airConditionerMapper.get(acNumber);
         // 如果空调opening字段 = false
         if (!airConditionerDO.getOpening()) {
-            return ;
+            return;
         }
         long currentTime = System.currentTimeMillis();
-        AirConditionerDO newAirConditionerDO = AirConditionerDO.builder()
-                .acNumber(acNumber)
-                .windSpeed(targetWindSpeed)
-                // 调温调风时，也需要更新
-                .connectionTime(currentTime)
-                .build();
-        if (!airConditionerDO.getOpening())
-            return;
         if (airConditionerDO.getConnecting()) {
-            DetailedFeesDO newDetailedFeesDO = getDetailedFeesDO(airConditionerDO);
-            detailedFeesMapper.insert(newDetailedFeesDO);
-            newAirConditionerDO.setCurrFee(airConditionerDO.getCurrFee()+newDetailedFeesDO.getFee());
-            airConditionerMapper.update(newAirConditionerDO);
-            // 更新运行队列
-            RunningQueueDO runningQueueDO = new RunningQueueDO(acNumber, currentTime);
-            runningQueueMapper.update(runningQueueDO);
+            DetailedFeesDO detailedFeesDO = getDetailedFeesDO(airConditionerDO);
+            detailedFeesMapper.insert(detailedFeesDO);
+            airConditionerMapper.update(AirConditionerDO.builder()
+                    .acNumber(acNumber)
+                    .windSpeed(targetWindSpeed)
+                    // 调温调风时，也需要更新
+                    .connectionTime(currentTime)
+                    .currFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee())
+                    .build());
         } else {
-            waitingQueueMapper.update(newAirConditionerDO);
+            WaitingQueueDO newWaitingQueueDO = WaitingQueueDO.builder()
+                    .acNumber(acNumber)
+                    .windSpeed(targetWindSpeed)
+                    .temperature(systemParam.getDefaultTemperature())
+                    .requestTime(currentTime)
+                    .build();
+            WaitingQueueDO waitingQueueDO = waitingQueueMapper.select(acNumber);
+            if (waitingQueueDO != null) {
+                newWaitingQueueDO.setTemperature(waitingQueueDO.getTemperature());
+                newWaitingQueueDO.setRequestTime(waitingQueueDO.getRequestTime());
+            }
+            waitingQueueMapper.insert(waitingQueueDO);
         }
     }
 
