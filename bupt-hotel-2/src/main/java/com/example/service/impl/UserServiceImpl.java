@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
 import com.example.dao.entity.DetailedFeesDO;
+import com.example.dao.entity.RunningQueueDO;
 import com.example.dao.entity.WaitingQueueDO;
 import com.example.dao.mapper.AirConditionerMapper;
 import com.example.dao.mapper.DetailedFeesMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -29,9 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void openOrClose(String acNumber) {
-        System.out.println(systemParam.getPriceTable());
-
-
         AirConditionerDO airConditionerDO = airConditionerMapper.get(acNumber);
         boolean isOpening = airConditionerDO.getOpening();
         boolean isConnecting = airConditionerDO.getConnecting();
@@ -96,7 +95,7 @@ public class UserServiceImpl implements UserService {
                     .connectionTime(currentTime)
                     .currFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee())
                     .build());
-            log.info("空调" + acNumber + "连接中，更新温度" +targetTemperature +"从等待队列中移出");
+            log.info("空调" + acNumber + "连接中，更新温度" + targetTemperature);
         } else {
             WaitingQueueDO newWaitingQueueDO = WaitingQueueDO.builder()
                     .acNumber(acNumber)
@@ -105,14 +104,16 @@ public class UserServiceImpl implements UserService {
                     .requestTime(currentTime)
                     .build();
             WaitingQueueDO waitingQueueDO = waitingQueueMapper.select(acNumber);
-            if (waitingQueueDO != null) {
-                newWaitingQueueDO.setWindSpeed(waitingQueueDO.getWindSpeed());
-                newWaitingQueueDO.setRequestTime(waitingQueueDO.getRequestTime());
-                waitingQueueMapper.delete(acNumber);
-            }
+            newWaitingQueueDO.setWindSpeed(waitingQueueDO.getWindSpeed());
+            newWaitingQueueDO.setRequestTime(waitingQueueDO.getRequestTime());
+            waitingQueueMapper.delete(acNumber);
             waitingQueueMapper.insert(newWaitingQueueDO);
-            log.info("空调" + acNumber + "在等待队列中，更新温度" +targetTemperature);
+            log.info("空调" + acNumber + "在等待队列中，更新温度" + targetTemperature);
         }
+        List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
+        System.out.println(runningQueue1);
+        List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
+        System.out.println(waitQueue1);
     }
 
     @Override

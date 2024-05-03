@@ -33,7 +33,6 @@ public class DispatcherServiceImpl implements DispatcherService {
     public void establishConnection(List<String> list) {
         for (String acNumber : list) {
             waitingQueueMapper.delete(acNumber);
-           // runningQueueMapper.insert();
 
             AirConditionerDO airConditionerDO = AirConditionerDO.builder()
                     .acNumber(acNumber)

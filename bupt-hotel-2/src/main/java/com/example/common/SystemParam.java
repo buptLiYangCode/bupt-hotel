@@ -66,7 +66,7 @@ public class SystemParam {
     private SystemParam() {
         maxConnectionCount = 3;
         currConnectionCount = 0;
-        timeSplice = 5000L;
+        timeSplice = 1000L;
         mode = 0;
         temperatureUpperBound = 30;
         temperatureLowerBound = 20;

@@ -33,10 +33,15 @@ public class DispatcherTask {
 
     private final SystemParam systemParam = SystemParam.getInstance();
 
-    @Scheduled(fixedRate = 1000000) // 每隔1000ms执行一次
+    @Scheduled(fixedRate = 1000) // 每隔1000ms执行一次
     public void dispatchConnections() {
         long currentTime = System.currentTimeMillis();
+
         log.info("定时检查捏");
+        List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
+        System.out.println(runningQueue1);
+        List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
+        System.out.println(waitQueue1);
 
         List<RunningQueueDO> runningQueue = runningQueueMapper.getAll();
         if (!runningQueue.isEmpty()) {
@@ -63,12 +68,12 @@ public class DispatcherTask {
                     double fee = price * minutes;
                     // 插入记录到 详细费用表
                     detailedFeesMapper.insert(DetailedFeesDO.builder()
-                                    .acNumber(acNumber)
-                                    .windSpeed(airConditionerDO.getWindSpeed())
-                                    .temperature(airConditionerDO.getTemperature())
-                                    .startTime(airConditionerDO.getConnectionTime())
-                                    .minutes(minutes)
-                                    .fee(fee)
+                            .acNumber(acNumber)
+                            .windSpeed(airConditionerDO.getWindSpeed())
+                            .temperature(airConditionerDO.getTemperature())
+                            .startTime(airConditionerDO.getConnectionTime())
+                            .minutes(minutes)
+                            .fee(fee)
                             .build());
                     // 修改空调状态信息
                     airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + fee);
@@ -89,20 +94,20 @@ public class DispatcherTask {
                             .thenComparing(WaitingQueueDO::getRequestTime)) // 风速相同则按照请求时间早的排前面
                     .toList(); // 收集结果到新的列表
             // 将前k 个放入运行队列，移出等待队列，连接数 + 1
-            for (int i = 0; i < k; i++) {
+            for (int i = 0; i < k && sortedWaitQueue.size() > i; i++) {
                 // 中央空调当前连接数 + 1
                 systemParam.setCurrConnectionCount(systemParam.getCurrConnectionCount() + 1);
-                // TODO 什么问题？
                 WaitingQueueDO waitingQueueDO = sortedWaitQueue.get(i);
                 runningQueueMapper.insert(RunningQueueDO.builder()
-                                .acNumber(waitingQueueDO.getAcNumber())
-                                .connectionTime(currentTime)
+                        .acNumber(waitingQueueDO.getAcNumber())
+                        .connectionTime(currentTime)
                         .build());
                 waitingQueueMapper.delete(waitingQueueDO.getAcNumber());
                 // 更新空调 连接时间字段
                 airConditionerMapper.update(AirConditionerDO.builder()
                         .acNumber(waitingQueueDO.getAcNumber())
                         .connectionTime(currentTime)
+                        .connecting(true)
                         .build());
             }
         }
