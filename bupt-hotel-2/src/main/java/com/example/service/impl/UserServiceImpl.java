@@ -116,6 +116,12 @@ public class UserServiceImpl implements UserService {
         System.out.println(waitQueue1);
     }
 
+    /**
+     * 更新风速。
+     *
+     * @param acNumber        空调编号
+     * @param targetWindSpeed 目标风速
+     */
     @Override
     public void updateWindSpeed(String acNumber, Integer targetWindSpeed) {
         AirConditionerDO airConditionerDO = airConditionerMapper.get(acNumber);
@@ -134,23 +140,32 @@ public class UserServiceImpl implements UserService {
                     .connectionTime(currentTime)
                     .currFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee())
                     .build());
+            log.info("空调" + acNumber + "连接中，更新风速" + targetWindSpeed);
         } else {
             WaitingQueueDO newWaitingQueueDO = WaitingQueueDO.builder()
                     .acNumber(acNumber)
-                    .windSpeed(targetWindSpeed)
                     .temperature(systemParam.getDefaultTemperature())
+                    .windSpeed(targetWindSpeed)
                     .requestTime(currentTime)
                     .build();
             WaitingQueueDO waitingQueueDO = waitingQueueMapper.select(acNumber);
-            if (waitingQueueDO != null) {
-                newWaitingQueueDO.setTemperature(waitingQueueDO.getTemperature());
-                newWaitingQueueDO.setRequestTime(waitingQueueDO.getRequestTime());
-            }
-            waitingQueueMapper.insert(waitingQueueDO);
+            newWaitingQueueDO.setWindSpeed(waitingQueueDO.getWindSpeed());
+            newWaitingQueueDO.setRequestTime(waitingQueueDO.getRequestTime());
+            waitingQueueMapper.delete(acNumber);
+            waitingQueueMapper.insert(newWaitingQueueDO);
+            log.info("空调" + acNumber + "在等待队列中，更新风速" + targetWindSpeed);
         }
+        List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
+        System.out.println(runningQueue1);
+        List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
+        System.out.println(waitQueue1);
     }
 
-
+    /**
+     * 一个专门计算费用的方法
+     * @param airConditionerDO 空调信息
+     * @return 详细费用对象
+     */
     private DetailedFeesDO getDetailedFeesDO(AirConditionerDO airConditionerDO) {
         long currTime = System.currentTimeMillis();
         long lastConnectionTime = airConditionerDO.getConnectionTime();
