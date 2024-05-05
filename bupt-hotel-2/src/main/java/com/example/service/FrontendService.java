@@ -5,7 +5,6 @@ import com.example.dto.req.FrontendFreeRoomReqDTO;
 import com.example.dto.req.FrontendRegisterReqDTO;
 import com.example.dto.req.FrontendSettleBillReqDTO;
 import com.example.dto.resp.FrontendDetailFeesRespDTO;
-import com.example.dto.resp.FrontendFreeRoomRespDTO;
 import com.example.dto.resp.FrontendRegisterRespDTO;
 import com.example.dto.resp.FrontendSettleBillRespDTO;
 
@@ -13,7 +12,7 @@ import java.util.List;
 
 public interface FrontendService {
 
-    FrontendFreeRoomRespDTO getFreeRoom(FrontendFreeRoomReqDTO freeRoomReqDTO);
+    boolean getFreeRoom(FrontendFreeRoomReqDTO freeRoomReqDTO);
 
     FrontendRegisterRespDTO register(FrontendRegisterReqDTO frontendRegisterReqDTO);
 

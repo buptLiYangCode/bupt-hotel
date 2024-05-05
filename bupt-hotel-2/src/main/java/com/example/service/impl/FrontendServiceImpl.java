@@ -10,7 +10,6 @@ import com.example.dto.req.FrontendFreeRoomReqDTO;
 import com.example.dto.req.FrontendRegisterReqDTO;
 import com.example.dto.req.FrontendSettleBillReqDTO;
 import com.example.dto.resp.FrontendDetailFeesRespDTO;
-import com.example.dto.resp.FrontendFreeRoomRespDTO;
 import com.example.dto.resp.FrontendRegisterRespDTO;
 import com.example.dto.resp.FrontendSettleBillRespDTO;
 import com.example.service.FrontendService;
@@ -37,7 +36,7 @@ public class FrontendServiceImpl implements FrontendService {
      * @return t / f 返回结果给前台
      */
     @Override
-    public FrontendFreeRoomRespDTO getFreeRoom(FrontendFreeRoomReqDTO frontendFreeRoomReqDTO) {
+    public boolean getFreeRoom(FrontendFreeRoomReqDTO frontendFreeRoomReqDTO) {
         // 给旅客分配房间
         Long checkInTime = frontendFreeRoomReqDTO.getCheckInTime();
         Long checkOutTime = frontendFreeRoomReqDTO.getCheckOutTime();
@@ -49,9 +48,7 @@ public class FrontendServiceImpl implements FrontendService {
         List<RoomDO> collect = allRooms.stream()
                 .filter(r -> !reservedRooms.contains(r.getRoomNumber()))
                 .toList();
-        return FrontendFreeRoomRespDTO.builder()
-                .hasRoomsAvailable(collect.size() > 0)
-                .build();
+        return collect.size() > 0;
     }
 
     /**

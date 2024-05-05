@@ -7,7 +7,6 @@ import com.example.dto.req.FrontendFreeRoomReqDTO;
 import com.example.dto.req.FrontendRegisterReqDTO;
 import com.example.dto.req.FrontendSettleBillReqDTO;
 import com.example.dto.resp.FrontendDetailFeesRespDTO;
-import com.example.dto.resp.FrontendFreeRoomRespDTO;
 import com.example.dto.resp.FrontendRegisterRespDTO;
 import com.example.dto.resp.FrontendSettleBillRespDTO;
 import com.example.service.FrontendService;
@@ -35,8 +34,8 @@ public class FrontendController {
      * @return t / f 返回结果给前台
      */
     @GetMapping("/frontend/free-room")
-    public Result<FrontendFreeRoomRespDTO> getFreeRoom(@RequestBody FrontendFreeRoomReqDTO freeRoomReqDTO) {
-        FrontendFreeRoomRespDTO frontendFreeRoomRespDTO = frontendService.getFreeRoom(freeRoomReqDTO);
+    public Result<Boolean> getFreeRoom(@RequestBody FrontendFreeRoomReqDTO freeRoomReqDTO) {
+        boolean frontendFreeRoomRespDTO = frontendService.getFreeRoom(freeRoomReqDTO);
         return Results.success(frontendFreeRoomRespDTO);
     }
 
