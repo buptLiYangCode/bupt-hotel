@@ -18,7 +18,7 @@ public class DetailFeesReqDTO {
     /*
     入住时间
      */
-    private Date checkIntegerime;
+    private Date checkInTime;
 
     /*
     离开时间
