@@ -9,6 +9,8 @@ import com.example.dto.resp.FrontendFreeRoomRespDTO;
 import com.example.dto.resp.FrontendRegisterRespDTO;
 import com.example.dto.resp.FrontendSettleBillRespDTO;
 
+import java.util.List;
+
 public interface FrontendService {
 
     FrontendFreeRoomRespDTO getFreeRoom(FrontendFreeRoomReqDTO freeRoomReqDTO);
@@ -17,5 +19,5 @@ public interface FrontendService {
 
     FrontendSettleBillRespDTO settleBill(FrontendSettleBillReqDTO frontendSettleBillReqDTO);
 
-    FrontendDetailFeesRespDTO getDetailFees(FrontendDetailFeesReqDTO frontendDetailFeesReqDTO);
+    List<FrontendDetailFeesRespDTO> getDetailFees(FrontendDetailFeesReqDTO frontendDetailFeesReqDTO);
 }

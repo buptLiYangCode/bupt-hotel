@@ -10,6 +10,8 @@ public interface AirConditionerMapper {
     @Select("select * from t_air_conditioner where ac_number = #{acNumber}")
     AirConditionerDO get(String acNumber);
 
-
     void update(AirConditionerDO airConditionerDO);
+
+    @Select("select * from t_air_conditioner where ac_number = #{acNumber}")
+    AirConditionerDO select(String acNumber);
 }
