@@ -6,10 +6,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * 空调价表实体类(单例模式)
+ *
  */
 @Data
 public class SystemParam {
+
+    /*
+    标准间单价
+     */
+    private Double standardRoomPrice;
+
+    /*
+    大床房单价
+     */
+    private Double deluxeRoomPrice;
 
     /*
     中央空调最大连接计数
@@ -38,6 +48,7 @@ public class SystemParam {
     调温下限
      */
     private Integer temperatureLowerBound;
+
     /*
     风速上限
      */
@@ -47,10 +58,12 @@ public class SystemParam {
     风速下限
      */
     private Integer windSpeedLowerBound;
+
     /*
     默认温度
      */
     private Integer defaultTemperature;
+
     /*
     默认风速
      */
@@ -64,6 +77,8 @@ public class SystemParam {
     private static SystemParam instance;
 
     private SystemParam() {
+        standardRoomPrice = 200.00;
+        deluxeRoomPrice = 300.00;
         maxConnectionCount = 3;
         currConnectionCount = 0;
         timeSplice = 1000L;
