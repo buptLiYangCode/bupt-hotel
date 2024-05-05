@@ -1,12 +1,14 @@
 package com.example.dto.resp;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FrontendRegisterRespDTO {
     /** 房间号 */
     private String roomNumber;

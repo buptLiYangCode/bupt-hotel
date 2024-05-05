@@ -16,7 +16,7 @@ public class FrontendFreeRoomReqDTO {
     /*
     入住时间
      */
-    private Long checkIntegerime;
+    private Long checkInTime;
 
     /*
     离开时间

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,7 +39,7 @@ public class FrontendRegisterReqDTO {
     /*
     入住时间
      */
-    private Long checkIntegerime;
+    private Long checkInTime;
     /*
     退房时间
      */

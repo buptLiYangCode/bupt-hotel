@@ -16,7 +16,7 @@ public class FrontendSettleBillReqDTO {
     /*
     身份证号
      */
-    private String idCardNumber;
+    private String idCard;
 
     /*
     房间号

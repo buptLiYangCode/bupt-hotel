@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  *
  */
@@ -32,10 +34,9 @@ public class FrontendController {
      * @param freeRoomReqDTO 房间类型、入住时间、离开时间
      * @return t / f 返回结果给前台
      */
-    @GetMapping("/frontend/freeRoom")
+    @GetMapping("/frontend/free-room")
     public Result<FrontendFreeRoomRespDTO> getFreeRoom(@RequestBody FrontendFreeRoomReqDTO freeRoomReqDTO) {
         FrontendFreeRoomRespDTO frontendFreeRoomRespDTO = frontendService.getFreeRoom(freeRoomReqDTO);
-//        return frontendFreeRoomRespDTO;
         return Results.success(frontendFreeRoomRespDTO);
     }
 
@@ -47,7 +48,7 @@ public class FrontendController {
     @PostMapping("/frontend/register")
     public Result<FrontendRegisterRespDTO> register(@RequestBody FrontendRegisterReqDTO frontendRegisterReqDTO) {
         FrontendRegisterRespDTO frontendRegisterRespDTO= frontendService.register(frontendRegisterReqDTO);
-        return Results.success(null);
+        return Results.success(frontendRegisterRespDTO);
     }
 
     /**
@@ -68,8 +69,8 @@ public class FrontendController {
      * @return 空调费用详细单
      */
     @GetMapping("/frontend/ac-bill")
-    public Result<FrontendDetailFeesRespDTO> getDetailFees(@RequestBody FrontendDetailFeesReqDTO frontendDetailFeesReqDTO) {
-        FrontendDetailFeesRespDTO frontendDetailFeesRespDTO = frontendService.getDetailFees(frontendDetailFeesReqDTO);
-        return Results.success(null);
+    public Result<List<FrontendDetailFeesRespDTO>> getDetailFees(@RequestBody FrontendDetailFeesReqDTO frontendDetailFeesReqDTO) {
+        List<FrontendDetailFeesRespDTO> frontendDetailFeesRespDTO = frontendService.getDetailFees(frontendDetailFeesReqDTO);
+        return Results.success(frontendDetailFeesRespDTO);
     }
 }
