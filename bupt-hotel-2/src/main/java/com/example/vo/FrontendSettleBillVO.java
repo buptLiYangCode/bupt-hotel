@@ -1,4 +1,4 @@
-package com.example.dto.resp;
+package com.example.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,26 +9,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FrontendSettleBillRespDTO {
+public class FrontendSettleBillVO {
 
     /*
     房间单价
      */
-    private Double roomPrice;
+    private double roomPrice;
     /*
     住宿天数
      */
-    private Integer days;
+    private int days;
     /*
     房费
      */
-    private Double roomFee;
+    private double roomFee;
     /*
     空调费
      */
-    private Double airConditionerFee;
+    private double airConditionerFee;
     /*
     总费用
      */
-    private Double totalFee;
+    private double totalFee;
 }

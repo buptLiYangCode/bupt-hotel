@@ -16,7 +16,7 @@ public class UserDO {
     private String userName;
 
     /** 旅客年龄 */
-    private Long age;
+    private long age;
 
     /** 旅客性别 */
     private String gender;
@@ -31,8 +31,8 @@ public class UserDO {
     private String roomNumber;
 
     /** 入住时间 */
-    private Long checkInTime;
+    private long checkInTime;
 
     /** 离开时间 */
-    private Long checkOutTime;
+    private long checkOutTime;
 }

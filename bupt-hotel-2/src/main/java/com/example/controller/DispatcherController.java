@@ -32,7 +32,7 @@ public class DispatcherController {
      * 当前有k个资源，查询等待列表前k个空调编号
      */
     @GetMapping("/dispatcher/waiting")
-    public Result<List<String>> queryTopKWaitingACNumbers(Integer k) {
+    public Result<List<String>> queryTopKWaitingACNumbers(int k) {
         List<String> list = dispatcherService.queryTopKWaitingACNumbers(k);
         return Results.success(list);
     }

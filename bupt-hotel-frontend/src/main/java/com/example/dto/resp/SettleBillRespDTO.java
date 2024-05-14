@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.Double;
+import java.math.double;
 
 @Data
 @AllArgsConstructor
@@ -14,21 +14,21 @@ public class SettleBillRespDTO {
     /*
     房间单价
      */
-    private Double roomPrice;
+    private double roomPrice;
     /*
     住宿天数
      */
-    private Double days;
+    private double days;
     /*
     房费
      */
-    private Double roomFee;
+    private double roomFee;
     /*
     空调费
      */
-    private Double airConditionerFee;
+    private double airConditionerFee;
     /*
     总费用
      */
-    private Double totalFee;
+    private double totalFee;
 }

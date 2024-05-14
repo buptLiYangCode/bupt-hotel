@@ -1,4 +1,4 @@
-package com.example.dto.req;
+package com.example.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FrontendSettleBillReqDTO {
+public class FrontendSettleBillDTO {
     /*
     旅客姓名
      */

@@ -1,6 +1,5 @@
-package com.example.dao.entity;
+package com.example.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("t_room_reservation")
-public class RoomReservationDO {
+public class FrontendDetailFeesDTO {
+    /*
+    房间号
+     */
     private String roomNumber;
+
+    /*
+    入住时间
+     */
     private long checkInTime;
-    private long checkOutTime;
+
+    /*
+    离开时间
+     */
+    private long CheckOutTime;
 }

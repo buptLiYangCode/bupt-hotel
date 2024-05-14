@@ -1,140 +1,75 @@
 package com.example.common;
 
-import lombok.Data;
-
-import java.util.HashMap;
 import java.util.LinkedList;
+
+import static com.example.common.constant.SystemConstant.SECONDS_PER_MINUTE;
 
 /**
  *
  */
-@Data
 public class SystemParam {
-
-    /*
-    标准间单价
-     */
-    private Double standardRoomPrice;
-
-    /*
-    大床房单价
-     */
-    private Double deluxeRoomPrice;
-
     /*
     中央空调最大连接计数
      */
-    private Integer maxConnectionCount;
+    public static int MAX_CONNECTION_COUNT = 3;
     /*
     中央空调当前连接计数
     */
-    private Integer currConnectionCount;
+    public static int CURR_CONNECTION_COUNT = 0;
     /*
     每次连接的最大时间ms
      */
-    private Long timeSplice;
+    public static int TIME_SPLICE = 2 * SECONDS_PER_MINUTE;
 
     /*
     空调模式：0表示制冷、1制热
     */
-    private Integer mode;
+    public static int MODE = 0;
 
     /*
     调温上限
      */
-    private Integer temperatureUpperBound;
+    public static double TEMPERATURE_UPPER_BOUND = 28.00;
 
     /*
     调温下限
      */
-    private Integer temperatureLowerBound;
+    public static double TEMPERATURE_LOWER_BOUND = 18.00;
 
     /*
     风速上限
      */
-    private Integer windSpeedUpperBound;
+    public static int WIND_SPEED_UPPER_BOUND = 3;
 
     /*
     风速下限
      */
-    private Integer windSpeedLowerBound;
+    public static int WIND_SPEED_LOWER_BOUND = 1;
 
     /*
     默认温度
      */
-    private Integer defaultTemperature;
+    public static double DEFAULT_TEMPERATURE = 25.00;
 
     /*
     默认风速
      */
-    private Integer defaultWindSpeed;
+    public static int DEFAULT_WIND_SPEED = 2;
 
     /*
-    计价规则：每档风速: 每度温度：分钟价格
+
      */
-    private LinkedList<HashMap<Integer, Double>> priceTable;
+    public static LinkedList<Double> TEM_CHANGE_PER_SECOND = new LinkedList<>();
 
-    private static SystemParam instance;
+    /*
+    计价规则：一度一元
+     */
+    public static double PRICE = 1.00;
 
-    private SystemParam() {
-        standardRoomPrice = 200.00;
-        deluxeRoomPrice = 300.00;
-        maxConnectionCount = 3;
-        currConnectionCount = 0;
-        timeSplice = 1000L;
-        mode = 0;
-        temperatureUpperBound = 30;
-        temperatureLowerBound = 20;
-        defaultTemperature = 26;
-        windSpeedUpperBound = 3;
-        windSpeedLowerBound = 1;
-        defaultWindSpeed = 1;
-
-        priceTable = new LinkedList<>();
-        priceTable.add(new HashMap<>());
-        HashMap<Integer, Double> hashMap1 = new HashMap<>();
-        hashMap1.put(21, 0.21);
-        hashMap1.put(22, 0.22);
-        hashMap1.put(23, 0.23);
-        hashMap1.put(24, 0.24);
-        hashMap1.put(25, 0.25);
-        hashMap1.put(26, 0.26);
-        hashMap1.put(27, 0.27);
-        hashMap1.put(28, 0.28);
-        hashMap1.put(29, 0.29);
-        hashMap1.put(30, 0.30);
-        priceTable.add(hashMap1);
-        HashMap<Integer, Double> hashMap2 = new HashMap<>();
-        hashMap2.put(21, 0.21 * 2);
-        hashMap2.put(22, 0.22 * 2);
-        hashMap2.put(24, 0.24 * 2);
-        hashMap2.put(25, 0.25 * 2);
-        hashMap2.put(23, 0.23 * 2);
-        hashMap2.put(26, 0.26 * 2);
-        hashMap2.put(27, 0.27 * 2);
-        hashMap2.put(28, 0.28 * 2);
-        hashMap2.put(29, 0.29 * 2);
-        hashMap2.put(30, 0.30 * 2);
-        priceTable.add(hashMap2);
-        HashMap<Integer, Double> hashMap3 = new HashMap<>();
-        hashMap3.put(21, 0.21 * 3);
-        hashMap3.put(22, 0.22 * 3);
-        hashMap3.put(23, 0.23 * 3);
-        hashMap3.put(24, 0.24 * 3);
-        hashMap3.put(25, 0.25 * 3);
-        hashMap3.put(26, 0.26 * 3);
-        hashMap3.put(27, 0.27 * 3);
-        hashMap3.put(28, 0.28 * 3);
-        hashMap3.put(29, 0.29 * 3);
-        hashMap3.put(30, 0.30 * 3);
-        priceTable.add(hashMap3);
-        
-    }
-
-    public static synchronized SystemParam getInstance() {
-        if (instance == null) {
-            instance = new SystemParam();
-        }
-        return instance;
+    static {
+        TEM_CHANGE_PER_SECOND.add(0.00);
+        TEM_CHANGE_PER_SECOND.add(1.00 / 3 / SECONDS_PER_MINUTE);
+        TEM_CHANGE_PER_SECOND.add(1.00 / 2 / SECONDS_PER_MINUTE);
+        TEM_CHANGE_PER_SECOND.add(1.00 / SECONDS_PER_MINUTE);
     }
 }

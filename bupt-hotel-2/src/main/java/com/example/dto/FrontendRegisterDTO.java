@@ -1,4 +1,4 @@
-package com.example.dto.req;
+package com.example.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FrontendRegisterReqDTO {
+public class FrontendRegisterDTO {
     /*
     旅客姓名
      */
@@ -15,7 +15,7 @@ public class FrontendRegisterReqDTO {
     /*
     旅客年龄
      */
-    private Integer age;
+    private int age;
     /*
     旅客身份证号
      */
@@ -27,11 +27,11 @@ public class FrontendRegisterReqDTO {
     /*
     旅客性别：0-女，1-男
      */
-    private Integer sex;
+    private int sex;
     /*
     房间类型
     */
-    private Integer roomType;
+    private int roomType;
     /*
     房间号
      */
@@ -39,9 +39,9 @@ public class FrontendRegisterReqDTO {
     /*
     入住时间
      */
-    private Long checkInTime;
+    private long checkInTime;
     /*
     退房时间
      */
-    private Long checkOutTime;
+    private long checkOutTime;
 }

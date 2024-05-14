@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Result<T> implements Serializable {
 
     @Serial
-    private static final Long serialVersionUID = 5679018624309023727L;
+    private static final long serialVersionUID = 5679018624309023727L;
 
     /**
      * 正确返回码
@@ -41,7 +41,7 @@ public class Result<T> implements Serializable {
      */
     private String requestId;
 
-    public Boolean isSuccess() {
+    public boolean isSuccess() {
         return SUCCESS_CODE.equals(code);
     }
 }

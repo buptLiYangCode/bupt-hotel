@@ -20,40 +20,45 @@ public class AirConditionerDO {
     /*
     空调模式：0表示制冷、1制热
      */
-    private Integer mode;
+    private int mode;
 
     /*
     空调可以工作或停机检修：1表示可以工作、0停机检修
     */
-    private Boolean workable;
+    private boolean workable;
 
     /*
     空调打开或者关闭
     */
-    private Boolean opening;
+    private boolean opening;
 
     /*
     该空调是否与中央空调建立连接
     */
-    private Boolean connecting;
+    private boolean connecting;
 
     /*
     空调风速
     */
-    private Integer windSpeed;
+    private int windSpeed;
 
     /*
     空调目标温度
     */
-    private Integer temperature;
+    private double temperature;
 
     /*
     这个字段在 1.和中央空调建立连接 2.调温调风 两种情况下都会更新
      */
-    private Long connectionTime;
+    private long connectionTime;
 
     /*
     当前用户产生的费用
      */
-    private Double currFee;
+    private double currFee;
+
+    /*
+    空调对应的房间号
+     */
+    private String roomNumber;
 }

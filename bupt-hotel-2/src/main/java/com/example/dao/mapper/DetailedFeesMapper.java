@@ -1,8 +1,8 @@
 package com.example.dao.mapper;
 
 import com.example.dao.entity.DetailedFeesDO;
-import com.example.dto.req.FrontendDetailFeesReqDTO;
-import com.example.dto.resp.FrontendDetailFeesRespDTO;
+import com.example.dto.FrontendDetailFeesDTO;
+import com.example.vo.FrontendDetailFeesVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -17,5 +17,5 @@ public interface DetailedFeesMapper {
     void insert(DetailedFeesDO detailedFeesDO);
 
     @Select("select * from t_detailed_fees where room_number = #{roomNumber} and start_time > #{checkInTime} and start_time < #{checkOutTime}")
-    List<FrontendDetailFeesRespDTO> select(FrontendDetailFeesReqDTO frontendDetailFeesReqDTO);
+    List<FrontendDetailFeesVO> select(FrontendDetailFeesDTO frontendDetailFeesDTO);
 }

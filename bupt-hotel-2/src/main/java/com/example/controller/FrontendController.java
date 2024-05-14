@@ -2,14 +2,14 @@ package com.example.controller;
 
 import com.example.common.result.Result;
 import com.example.common.result.Results;
-import com.example.dto.req.FrontendDetailFeesReqDTO;
-import com.example.dto.req.FrontendFreeRoomReqDTO;
-import com.example.dto.req.FrontendRegisterReqDTO;
-import com.example.dto.req.FrontendSettleBillReqDTO;
-import com.example.dto.resp.FrontendDetailFeesRespDTO;
-import com.example.dto.resp.FrontendRegisterRespDTO;
-import com.example.dto.resp.FrontendSettleBillRespDTO;
+import com.example.dto.FrontendDetailFeesDTO;
+import com.example.dto.FrontendFreeRoomDTO;
+import com.example.dto.FrontendRegisterDTO;
+import com.example.dto.FrontendSettleBillDTO;
 import com.example.service.FrontendService;
+import com.example.vo.FrontendDetailFeesVO;
+import com.example.vo.FrontendRegisterVO;
+import com.example.vo.FrontendSettleBillVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,42 +34,42 @@ public class FrontendController {
      * @return t / f 返回结果给前台
      */
     @GetMapping("/frontend/free-room")
-    public Result<Boolean> getFreeRoom(@RequestBody FrontendFreeRoomReqDTO freeRoomReqDTO) {
+    public Result<Boolean> getFreeRoom(@RequestBody FrontendFreeRoomDTO freeRoomReqDTO) {
         boolean frontendFreeRoomRespDTO = frontendService.getFreeRoom(freeRoomReqDTO);
         return Results.success(frontendFreeRoomRespDTO);
     }
 
     /**
      * 后台将信息写入数据库
-     * @param frontendRegisterReqDTO 旅客登记信息
+     * @param frontendRegisterDTO 旅客登记信息
      * @return 登记成功，后台返回【房间号 + 房间密码】给前台
      */
     @PostMapping("/frontend/register")
-    public Result<FrontendRegisterRespDTO> register(@RequestBody FrontendRegisterReqDTO frontendRegisterReqDTO) {
-        FrontendRegisterRespDTO frontendRegisterRespDTO= frontendService.register(frontendRegisterReqDTO);
-        return Results.success(frontendRegisterRespDTO);
+    public Result<FrontendRegisterVO> register(@RequestBody FrontendRegisterDTO frontendRegisterDTO) {
+        FrontendRegisterVO frontendRegisterVO = frontendService.register(frontendRegisterDTO);
+        return Results.success(frontendRegisterVO);
     }
 
     /**
      * 根据前台提供的旅客身份信息查询房费和空调费用
-     * @param frontendSettleBillReqDTO 旅客姓名、身份证号、房间号、房间密码
+     * @param frontendSettleBillDTO 旅客姓名、身份证号、房间号、房间密码
      * @return 费用简洁单
      */
     @GetMapping("/frontend/bill")
-    public Result<FrontendSettleBillRespDTO> settleBill(@RequestBody FrontendSettleBillReqDTO frontendSettleBillReqDTO) {
-        FrontendSettleBillRespDTO frontendSettleBillRespDTO = frontendService.settleBill(frontendSettleBillReqDTO);
+    public Result<FrontendSettleBillVO> settleBill(@RequestBody FrontendSettleBillDTO frontendSettleBillDTO) {
+        FrontendSettleBillVO frontendSettleBillVO = frontendService.settleBill(frontendSettleBillDTO);
         return Results.success(null);
     }
 
     /**
      * 查询旅客住宿时间段内的空调详细计费记录
      *
-     * @param frontendDetailFeesReqDTO 房间号、入住时间、离开时间
+     * @param frontendDetailFeesDTO 房间号、入住时间、离开时间
      * @return 空调费用详细单
      */
     @GetMapping("/frontend/ac-bill")
-    public Result<List<FrontendDetailFeesRespDTO>> getDetailFees(@RequestBody FrontendDetailFeesReqDTO frontendDetailFeesReqDTO) {
-        List<FrontendDetailFeesRespDTO> frontendDetailFeesRespDTO = frontendService.getDetailFees(frontendDetailFeesReqDTO);
-        return Results.success(frontendDetailFeesRespDTO);
+    public Result<List<FrontendDetailFeesVO>> getDetailFees(@RequestBody FrontendDetailFeesDTO frontendDetailFeesDTO) {
+        List<FrontendDetailFeesVO> frontendDetailFeesVO = frontendService.getDetailFees(frontendDetailFeesDTO);
+        return Results.success(frontendDetailFeesVO);
     }
 }

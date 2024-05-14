@@ -1,4 +1,4 @@
-package com.example.dto.resp;
+package com.example.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FrontendFreeRoomRespDTO {
+public class FrontendFreeRoomVO {
     /** 是否还有房间 */
-    private Boolean hasRoomsAvailable;
+    private boolean hasRoomsAvailable;
 }

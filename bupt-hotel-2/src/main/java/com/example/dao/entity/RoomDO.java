@@ -27,14 +27,15 @@ public class RoomDO {
     /*
     房间类型：0-标准间，1-大床房
      */
-    private Integer roomType;
+    private int roomType;
+
+    /*
+    房间当前的温度
+     */
+    private double currTemperature;
 
     /*
     房间中空调编号
      */
     private String acNumber;
-    /*
-    房间中是否使用空调
-     */
-    private Boolean AirConditionerUsed;
 }

@@ -1,4 +1,4 @@
-package com.example.dto.resp;
+package com.example.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FrontendRegisterRespDTO {
+public class FrontendRegisterVO {
     /** 房间号 */
     private String roomNumber;
     /** 房间密码 */

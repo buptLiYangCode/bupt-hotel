@@ -1,4 +1,4 @@
-package com.example.dto.resp;
+package com.example.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,34 +7,34 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FrontendDetailFeesRespDTO {
+public class FrontendDetailFeesVO {
     /*
     空调编号
     */
-    private Long acNumber;
+    private long acNumber;
 
     /*
     空调风速
     */
-    private Integer windSpeed;
+    private int windSpeed;
 
     /*
     空调温度
     */
-    private Integer temperature;
+    private int temperature;
 
     /*
     开始时间
      */
-    private Long startTime;
+    private long startTime;
 
     /*
     分钟数
      */
-    private Long minutes;
+    private long minutes;
 
     /*
     该段时间费用
      */
-    private Double billing;
+    private double billing;
 }

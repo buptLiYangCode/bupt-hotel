@@ -1,22 +1,22 @@
 package com.example.service;
 
-import com.example.dto.req.FrontendDetailFeesReqDTO;
-import com.example.dto.req.FrontendFreeRoomReqDTO;
-import com.example.dto.req.FrontendRegisterReqDTO;
-import com.example.dto.req.FrontendSettleBillReqDTO;
-import com.example.dto.resp.FrontendDetailFeesRespDTO;
-import com.example.dto.resp.FrontendRegisterRespDTO;
-import com.example.dto.resp.FrontendSettleBillRespDTO;
+import com.example.dto.FrontendDetailFeesDTO;
+import com.example.dto.FrontendFreeRoomDTO;
+import com.example.dto.FrontendRegisterDTO;
+import com.example.dto.FrontendSettleBillDTO;
+import com.example.vo.FrontendDetailFeesVO;
+import com.example.vo.FrontendRegisterVO;
+import com.example.vo.FrontendSettleBillVO;
 
 import java.util.List;
 
 public interface FrontendService {
 
-    boolean getFreeRoom(FrontendFreeRoomReqDTO freeRoomReqDTO);
+    boolean getFreeRoom(FrontendFreeRoomDTO freeRoomReqDTO);
 
-    FrontendRegisterRespDTO register(FrontendRegisterReqDTO frontendRegisterReqDTO);
+    FrontendRegisterVO register(FrontendRegisterDTO frontendRegisterDTO);
 
-    FrontendSettleBillRespDTO settleBill(FrontendSettleBillReqDTO frontendSettleBillReqDTO);
+    FrontendSettleBillVO settleBill(FrontendSettleBillDTO frontendSettleBillDTO);
 
-    List<FrontendDetailFeesRespDTO> getDetailFees(FrontendDetailFeesReqDTO frontendDetailFeesReqDTO);
+    List<FrontendDetailFeesVO> getDetailFees(FrontendDetailFeesDTO frontendDetailFeesDTO);
 }

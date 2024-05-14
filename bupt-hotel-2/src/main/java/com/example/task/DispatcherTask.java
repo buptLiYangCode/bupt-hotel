@@ -1,14 +1,12 @@
-package com.example.controller;
+package com.example.task;
 
 import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
 import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.RunningQueueDO;
 import com.example.dao.entity.WaitingQueueDO;
-import com.example.dao.mapper.AirConditionerMapper;
-import com.example.dao.mapper.DetailedFeesMapper;
-import com.example.dao.mapper.RunningQueueMapper;
-import com.example.dao.mapper.WaitingQueueMapper;
+import com.example.dao.mapper.*;
+import com.example.utils.CommonTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,7 +18,6 @@ import java.util.List;
 /**
  * 调度任务，定时更新等待队列、服务队列
  */
-
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -30,14 +27,13 @@ public class DispatcherTask {
     private final WaitingQueueMapper waitingQueueMapper;
     private final AirConditionerMapper airConditionerMapper;
     private final DetailedFeesMapper detailedFeesMapper;
-
-    private final SystemParam systemParam = SystemParam.getInstance();
+    private final RoomMapper roomMapper;
 
     @Scheduled(fixedRate = 1000) // 每隔1000ms执行一次
     public void dispatchConnections() {
         long currentTime = System.currentTimeMillis();
 
-        log.info("定时检查捏");
+        log.info("定时检查");
         List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
         System.out.println(runningQueue1);
         List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
@@ -47,13 +43,13 @@ public class DispatcherTask {
         if (!runningQueue.isEmpty()) {
             for (RunningQueueDO runningQueueDO : runningQueue) {
                 String acNumber = runningQueueDO.getAcNumber();
-                Long connectionTime = runningQueueDO.getConnectionTime();
-
-                AirConditionerDO airConditionerDO = airConditionerMapper.get(acNumber);
-                // 如果时间片耗尽，更新空调状态，结算空调费用
-                if ((currentTime - connectionTime) > systemParam.getTimeSplice()) {
+                AirConditionerDO airConditionerDO = airConditionerMapper.select(acNumber);
+                // 1.时间片耗尽 2.已经降低到目标温度，更新空调状态，结算空调费用
+                long connectionTime = runningQueueDO.getConnectionTime();
+                double currTemperature = roomMapper.select(airConditionerDO.getRoomNumber()).getCurrTemperature();
+                if ((currentTime - connectionTime) > SystemParam.TIME_SPLICE || Math.abs(currTemperature - airConditionerDO.getTemperature()) < 0.01) {
                     // 断开连接，中央空调当前连接数 - 1
-                    systemParam.setCurrConnectionCount(systemParam.getCurrConnectionCount() - 1);
+                    SystemParam.CURR_CONNECTION_COUNT -= 1;
                     // 移出运行表，移进等待表
                     runningQueueMapper.delete(acNumber);
                     waitingQueueMapper.insert(WaitingQueueDO.builder()
@@ -62,31 +58,22 @@ public class DispatcherTask {
                             .temperature(airConditionerDO.getTemperature())
                             .requestTime(currentTime)
                             .build());
-                    // TODO 按秒计算费用
-                    double price = systemParam.getPriceTable().get(airConditionerDO.getWindSpeed()).get(airConditionerDO.getTemperature());
-                    long minutes = systemParam.getTimeSplice() / 1000;
-                    double fee = price * minutes;
-                    // 插入记录到 详细费用表
-                    detailedFeesMapper.insert(DetailedFeesDO.builder()
-                            .acNumber(acNumber)
-                            .windSpeed(airConditionerDO.getWindSpeed())
-                            .temperature(airConditionerDO.getTemperature())
-                            .startTime(airConditionerDO.getConnectionTime())
-                            .minutes(minutes)
-                            .fee(fee)
-                            .build());
+                    DetailedFeesDO detailedFeesDO = CommonTool.getDetailedFeesDO(airConditionerDO);
+                    detailedFeesMapper.insert(detailedFeesDO);
                     // 修改空调状态信息
-                    airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + fee);
+                    airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
                     airConditionerDO.setConnecting(false);
                     airConditionerDO.setConnectionTime(currentTime);
                     airConditionerMapper.update(airConditionerDO);
                 }
+
+
             }
         }
 
         List<WaitingQueueDO> waitQueue = waitingQueueMapper.getAll();
-        // k 表示空闲资源
-        int k = systemParam.getMaxConnectionCount() - systemParam.getCurrConnectionCount();
+        // k 表示空闲资源个数
+        int k = SystemParam.MAX_CONNECTION_COUNT - SystemParam.CURR_CONNECTION_COUNT;
         if (!waitQueue.isEmpty() && k > 0) {
             // 使用 Stream API 对 waitQueue 进行排序
             List<WaitingQueueDO> sortedWaitQueue = waitQueue.stream()
@@ -95,20 +82,20 @@ public class DispatcherTask {
                     .toList(); // 收集结果到新的列表
             // 将前k 个放入运行队列，移出等待队列，连接数 + 1
             for (int i = 0; i < k && sortedWaitQueue.size() > i; i++) {
+                String acNumber = sortedWaitQueue.get(i).getAcNumber();
+                AirConditionerDO airConditionerDO = airConditionerMapper.select(acNumber);
                 // 中央空调当前连接数 + 1
-                systemParam.setCurrConnectionCount(systemParam.getCurrConnectionCount() + 1);
-                WaitingQueueDO waitingQueueDO = sortedWaitQueue.get(i);
+                SystemParam.CURR_CONNECTION_COUNT += 1;
+                // 从等待队列进入服务队列
+                waitingQueueMapper.delete(acNumber);
                 runningQueueMapper.insert(RunningQueueDO.builder()
-                        .acNumber(waitingQueueDO.getAcNumber())
+                        .acNumber(acNumber)
                         .connectionTime(currentTime)
                         .build());
-                waitingQueueMapper.delete(waitingQueueDO.getAcNumber());
                 // 更新空调 连接时间字段
-                airConditionerMapper.update(AirConditionerDO.builder()
-                        .acNumber(waitingQueueDO.getAcNumber())
-                        .connectionTime(currentTime)
-                        .connecting(true)
-                        .build());
+                airConditionerDO.setConnecting(true);
+                airConditionerDO.setConnectionTime(currentTime);
+                airConditionerMapper.update(airConditionerDO);
             }
         }
     }

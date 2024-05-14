@@ -23,26 +23,30 @@ public class DetailedFeesDO {
     /*
     空调风速
     */
-    private Integer windSpeed;
-
-    /*
-    空调温度
-    */
-    private Integer temperature;
+    private int windSpeed;
 
     /*
     开始时间
      */
-    private Long startTime;
+    private long startTime;
+    /*
+    结束时间
+     */
+    private long endTime;
 
     /*
     分钟数
      */
-    private Long minutes;
+    private long seconds;
 
     /*
     该段时间费用
      */
-    private Double fee;
+    private double fee;
+
+    /*
+    费率
+     */
+    private double feeRate;
 
 }

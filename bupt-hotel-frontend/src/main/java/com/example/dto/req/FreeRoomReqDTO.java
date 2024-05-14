@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class FreeRoomReqDTO {
     /** 请求的房间类型。 */
-    private Integer roomType;
+    private int roomType;
 
     /**
      * 请求的住宿时间段。

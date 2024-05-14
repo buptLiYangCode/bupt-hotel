@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.Double;
+import java.math.double;
 import java.util.Date;
 
 @Data
@@ -14,17 +14,17 @@ public class DetailFeesRespDTO {
     /*
     空调编号
     */
-    private Long acNumber;
+    private long acNumber;
 
     /*
     空调风速
     */
-    private Integer windSpeed;
+    private int windSpeed;
 
     /*
     空调温度
     */
-    private Integer temperature;
+    private int temperature;
 
     /*
     开始时间
@@ -34,10 +34,10 @@ public class DetailFeesRespDTO {
     /*
     分钟数
      */
-    private Long minutes;
+    private long minutes;
 
     /*
     该段时间费用
      */
-    private Double billing;
+    private double billing;
 }

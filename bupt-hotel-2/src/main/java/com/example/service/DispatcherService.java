@@ -5,7 +5,7 @@ import java.util.List;
 public interface DispatcherService {
     int queryFreeResources();
 
-    List<String> queryTopKWaitingACNumbers(Integer k);
+    List<String> queryTopKWaitingACNumbers(int k);
 
     void establishConnection(List<String> list);
 

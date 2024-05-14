@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.common.result.Result;
 import com.example.common.result.Results;
+import com.example.dto.UserUpdateDTO;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,25 +27,12 @@ public class UserController {
     }
 
     /**
-     * 旅客打开、关闭空调
+     * 旅客更新空调温度
      * @return 后台返回操作结果
      */
     @PutMapping("/user/air-conditioner/temperature")
-    public Result<Void> updateTemperature(@RequestParam String acNumber, @RequestParam Integer targetTemperature) {
-        userService.updateTemperature(acNumber, targetTemperature);
+    public Result<Void> update(@RequestBody UserUpdateDTO userUpdateDTO) {
+        userService.update(userUpdateDTO);
         return Results.success();
     }
-
-    /**
-     * 旅客打开、关闭空调
-     * @return 后台返回操作结果
-     */
-    @PutMapping("/user/air-conditioner/wind-speed")
-    public Result<Void> updateWindSpeed(@RequestParam String acNumber, @RequestParam Integer windSpeed) {
-        userService.updateWindSpeed(acNumber, windSpeed);
-        return Results.success();
-    }
-
-
-
 }

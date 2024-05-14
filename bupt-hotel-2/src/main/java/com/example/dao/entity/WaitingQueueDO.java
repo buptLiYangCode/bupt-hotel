@@ -23,15 +23,15 @@ public class WaitingQueueDO {
     /*
     空调风速
     */
-    private Integer windSpeed;
+    private int windSpeed;
 
     /*
     空调温度
     */
-    private Integer temperature;
+    private double temperature;
 
     /*
     空调资源申请时间
      */
-    private Long requestTime;
+    private long requestTime;
 }

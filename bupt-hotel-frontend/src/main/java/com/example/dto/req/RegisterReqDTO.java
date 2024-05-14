@@ -16,7 +16,7 @@ public class RegisterReqDTO {
     /*
     旅客年龄
      */
-    private Integer age;
+    private int age;
     /*
     旅客身份证号
      */
@@ -28,11 +28,11 @@ public class RegisterReqDTO {
     /*
     旅客性别：0-女，1-男
      */
-    private Integer sex;
+    private int sex;
     /*
     房间类型
     */
-    private Integer roomType;
+    private int roomType;
     /*
     房间号
      */

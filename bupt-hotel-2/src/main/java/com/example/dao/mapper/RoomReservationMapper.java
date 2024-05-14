@@ -15,5 +15,5 @@ public interface RoomReservationMapper {
             FROM t_room_reservation
             WHERE (check_in_time < #{checkOutTime} AND check_out_time > #{checkInTime})
             """)
-    List<String> selectReservedRooms(@Param("checkInTime") Long checkInTime, @Param("checkOutTime") Long checkOutTime);
+    List<String> selectReservedRooms(@Param("checkInTime") long checkInTime, @Param("checkOutTime") long checkOutTime);
 }

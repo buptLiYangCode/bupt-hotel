@@ -1,9 +1,10 @@
 package com.example.service;
 
+import com.example.dto.UserUpdateDTO;
+
 public interface UserService {
     void openOrClose(String acNumber);
 
-    void updateTemperature(String acNumber, Integer targetTemperature);
+    void update(UserUpdateDTO userUpdateDTO);
 
-    void updateWindSpeed(String acNumber, Integer windSpeed);
 }

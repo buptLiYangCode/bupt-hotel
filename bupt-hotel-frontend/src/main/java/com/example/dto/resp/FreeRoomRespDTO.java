@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FreeRoomRespDTO {
     /** 是否还有房间 */
-    private Boolean hasRoomsAvailable;
+    private boolean hasRoomsAvailable;
 }

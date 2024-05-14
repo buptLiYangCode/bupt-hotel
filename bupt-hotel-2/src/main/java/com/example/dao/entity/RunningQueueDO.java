@@ -24,5 +24,5 @@ public class RunningQueueDO {
     /*
     空调获取中央空调连接的开始时间
      */
-    private Long connectionTime;
+    private long connectionTime;
 }

@@ -24,7 +24,7 @@ public class DispatcherServiceImpl implements DispatcherService {
     }
 
     @Override
-    public List<String> queryTopKWaitingACNumbers(Integer k) {
+    public List<String> queryTopKWaitingACNumbers(int k) {
 
         return null;
     }
