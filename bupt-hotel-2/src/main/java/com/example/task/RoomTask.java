@@ -38,6 +38,7 @@ public class RoomTask {
                 .toList();
         for (RoomDO roomDO : roomDOList) {
             roomDO.setCurrTemperature(roomDO.getCurrTemperature() + (0.5 / SECONDS_PER_MINUTE));
+            System.out.printf("房间%s温度回升至%.2f%n", roomDO.getRoomNumber(), roomDO.getCurrTemperature());
         }
     }
 }

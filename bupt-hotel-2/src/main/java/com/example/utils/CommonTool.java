@@ -21,6 +21,7 @@ public class CommonTool {
                 .endTime(currTime)
                 .seconds(seconds)
                 .fee(fee)
+                .feeRate(SystemParam.TEM_CHANGE_PER_SECOND.get(windSpeed) * SystemParam.PRICE)
                 .build();
     }
 }

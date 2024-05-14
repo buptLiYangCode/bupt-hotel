@@ -31,6 +31,9 @@
             <if test="currFee != null">
                 curr_fee = #{currFee},
             </if>
+            <if test="roomNumber != null">
+                room_number = #{roomNumber},
+            </if>
         </set>
         WHERE ac_number = #{acNumber}
     </update>

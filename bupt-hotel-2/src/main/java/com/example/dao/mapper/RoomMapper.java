@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface RoomMapper {
     @Select("select * from t_room where room_type = #{roomType}")
-    List<RoomDO> selectAllRooms(int roomType);
+    List<RoomDO> selectByType(int roomType);
 
     @Select("select * from t_room where room_number = #{roomNumber} ")
     RoomDO select(String roomNumber);

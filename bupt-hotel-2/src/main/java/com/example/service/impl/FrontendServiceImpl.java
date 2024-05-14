@@ -41,7 +41,7 @@ public class FrontendServiceImpl implements FrontendService {
         // 查询已经预订的房间
         List<String> reservedRooms = roomReservationMapper.selectReservedRooms(checkInTime, checkOutTime);
         // 查询所有对应类型的房间
-        List<RoomDO> allRooms = roomMapper.selectAllRooms(frontendFreeRoomDTO.getRoomType());
+        List<RoomDO> allRooms = roomMapper.selectByType(frontendFreeRoomDTO.getRoomType());
         // 可选房间集合
         List<RoomDO> collect = allRooms.stream()
                 .filter(r -> !reservedRooms.contains(r.getRoomNumber()))
@@ -65,7 +65,7 @@ public class FrontendServiceImpl implements FrontendService {
         // 查询已经预订的房间
         List<String> reservedRooms = roomReservationMapper.selectReservedRooms(checkInTime, checkOutTime);
         // 查询所有对应类型的房间
-        List<RoomDO> allRooms = roomMapper.selectAllRooms(frontendRegisterDTO.getRoomType());
+        List<RoomDO> allRooms = roomMapper.selectByType(frontendRegisterDTO.getRoomType());
         RoomDO firstRoom = allRooms.stream()
                 .filter(r -> !reservedRooms.contains(r.getRoomNumber()))
                 .toList().get(0);

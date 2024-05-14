@@ -1,6 +1,7 @@
 package com.example.task;
 
 import com.example.common.SystemParam;
+import com.example.dao.entity.AirConditionerDO;
 import com.example.dao.entity.RoomDO;
 import com.example.dao.mapper.AirConditionerMapper;
 import com.example.dao.mapper.RoomMapper;
@@ -25,7 +26,10 @@ public class AirConditionerTask {
 
         LinkedList<RoomDO> roomDOs = roomMapper.getAll();
         List<RoomDO> connectionList = roomDOs.stream()
-                .filter(roomDO -> airConditionerMapper.select(roomDO.getAcNumber()).isConnecting())
+                .filter(roomDO -> {
+                    AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
+                    return airConditionerDO.isConnecting();
+                })
                 .toList();
         for (RoomDO roomDO : connectionList) {
             roomDO.setCurrTemperature(roomDO.getCurrTemperature() - SystemParam.TEM_CHANGE_PER_SECOND.get(airConditionerMapper.select(roomDO.getAcNumber()).getWindSpeed()));
