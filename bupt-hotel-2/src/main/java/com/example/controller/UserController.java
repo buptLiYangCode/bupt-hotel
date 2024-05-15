@@ -30,7 +30,7 @@ public class UserController {
      * 旅客更新空调温度
      * @return 后台返回操作结果
      */
-    @PutMapping("/user/air-conditioner/temperature")
+    @PutMapping("/user/air-conditioner/update")
     public Result<Void> update(@RequestBody UserUpdateDTO userUpdateDTO) {
         userService.update(userUpdateDTO);
         return Results.success();

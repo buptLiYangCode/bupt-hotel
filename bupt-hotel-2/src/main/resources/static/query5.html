@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Query</title>
+    <style>
+        #output {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+<h1>API Query</h1>
+<div id="output"></div>
+
+<script>
+    let count = 0;
+    const outputDiv = document.getElementById('output');
+
+    function queryAPI() {
+        fetch('http://localhost:8066/admin/query')
+            .then(response => response.text())
+            .then(data => {
+                count++;
+                const output = `Query #${count}: ${data}`;
+                outputDiv.textContent += output + '\n';
+            })
+            .catch(error => outputDiv.textContent += `Error: ${error}\n`);
+    }
+
+    setInterval(queryAPI, 1000);
+</script>
+</body>
+</html>

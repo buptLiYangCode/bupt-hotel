@@ -4,6 +4,7 @@ package com.example.dao.mapper;
 import com.example.dao.entity.RoomDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,5 +19,8 @@ public interface RoomMapper {
 
     @Select("select * from t_room")
     LinkedList<RoomDO> getAll();
+
+    @Update("update t_room set curr_temperature = #{currTemperature} where room_number = #{roomNumber}")
+    void update(RoomDO roomDO);
 }
 

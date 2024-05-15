@@ -1,5 +1,6 @@
 package com.example.common;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import static com.example.common.constant.SystemConstant.SECONDS_PER_MINUTE;
@@ -59,7 +60,9 @@ public class SystemParam {
     /*
 
      */
-    public static LinkedList<Double> TEM_CHANGE_PER_SECOND = new LinkedList<>();
+    public static LinkedList<Double> TEMP_CHANGE_PER_SECOND = new LinkedList<>();
+
+    public static HashMap<String, Double> INITIAL_TEMP_TABLE = new HashMap<>();
 
     /*
     计价规则：一度一元
@@ -67,9 +70,15 @@ public class SystemParam {
     public static double PRICE = 1.00;
 
     static {
-        TEM_CHANGE_PER_SECOND.add(0.00);
-        TEM_CHANGE_PER_SECOND.add(1.00 / 3 / SECONDS_PER_MINUTE);
-        TEM_CHANGE_PER_SECOND.add(1.00 / 2 / SECONDS_PER_MINUTE);
-        TEM_CHANGE_PER_SECOND.add(1.00 / SECONDS_PER_MINUTE);
+        TEMP_CHANGE_PER_SECOND.add(0.00);
+        TEMP_CHANGE_PER_SECOND.add(1.00 / 3 / SECONDS_PER_MINUTE);
+        TEMP_CHANGE_PER_SECOND.add(1.00 / 2 / SECONDS_PER_MINUTE);
+        TEMP_CHANGE_PER_SECOND.add(1.00 / SECONDS_PER_MINUTE);
+
+        INITIAL_TEMP_TABLE.put("1-01", 32.00);
+        INITIAL_TEMP_TABLE.put("1-02", 28.00);
+        INITIAL_TEMP_TABLE.put("1-03", 30.00);
+        INITIAL_TEMP_TABLE.put("1-04", 29.00);
+        INITIAL_TEMP_TABLE.put("1-05", 35.00);
     }
 }

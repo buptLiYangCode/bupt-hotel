@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.common.result.Result;
 import com.example.common.result.Results;
 import com.example.dto.AdminStartDTO;
+import com.example.service.AdminService;
 import com.example.vo.AdminQueryVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class AdminController {
+
+    private final AdminService adminService;
 
     /**
      * 空调全部置为可用，同时设置系统参数
@@ -46,5 +49,15 @@ public class AdminController {
     public Result<List<AdminQueryVO>> monitorRoomUnits(@RequestParam int floor) {
         // 查询对应楼层分机的运行状态信息
         return Results.success(null);
+    }
+
+    /**
+     * 查询验收需要的5个房间
+     * @return 某个时刻5个房间的状态
+     */
+    @GetMapping("/admin/query")
+    public Result<String> query5() {
+        //
+        return Results.success(adminService.query5());
     }
 }

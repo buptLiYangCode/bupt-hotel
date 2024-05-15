@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户调温调风
+     *
      * @param userUpdateDTO 用户发送的更新请求类
      */
     @Override
@@ -94,11 +95,16 @@ public class UserServiceImpl implements UserService {
             airConditionerDO.setTemperature(userUpdateDTO.getTargetTemperature());
             airConditionerDO.setWindSpeed(userUpdateDTO.getTargetWindSpeed());
             airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
+            airConditionerMapper.update(airConditionerDO);
         } else {
             log.info("空调{}没有出风，更新等待队列中的记录", userUpdateDTO.getAcNumber());
             WaitingQueueDO waitingQueueDO = waitingQueueMapper.select(userUpdateDTO.getAcNumber());
-            waitingQueueMapper.delete(userUpdateDTO.getAcNumber());
-
+            if (waitingQueueDO != null)
+                waitingQueueMapper.delete(userUpdateDTO.getAcNumber());
+            else
+                waitingQueueDO = WaitingQueueDO.builder()
+                        .acNumber(userUpdateDTO.getAcNumber())
+                        .build();
             waitingQueueDO.setTemperature(userUpdateDTO.getTargetTemperature());
             waitingQueueDO.setWindSpeed(userUpdateDTO.getTargetWindSpeed());
             waitingQueueDO.setRequestTime(currentTime);

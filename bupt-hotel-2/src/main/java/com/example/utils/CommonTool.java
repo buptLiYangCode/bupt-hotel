@@ -11,7 +11,7 @@ public class CommonTool {
         long connectionTime = airConditionerDO.getConnectionTime();
         long seconds = ((currTime - connectionTime) / 1000);
         int windSpeed = airConditionerDO.getWindSpeed();
-        double temChangePerSecond = SystemParam.TEM_CHANGE_PER_SECOND.get(windSpeed);
+        double temChangePerSecond = SystemParam.TEMP_CHANGE_PER_SECOND.get(windSpeed);
         double fee = seconds * temChangePerSecond * SystemParam.PRICE;
 
         return DetailedFeesDO.builder()
@@ -21,7 +21,7 @@ public class CommonTool {
                 .endTime(currTime)
                 .seconds(seconds)
                 .fee(fee)
-                .feeRate(SystemParam.TEM_CHANGE_PER_SECOND.get(windSpeed) * SystemParam.PRICE)
+                .feeRate(SystemParam.TEMP_CHANGE_PER_SECOND.get(windSpeed) * SystemParam.PRICE)
                 .build();
     }
 }
