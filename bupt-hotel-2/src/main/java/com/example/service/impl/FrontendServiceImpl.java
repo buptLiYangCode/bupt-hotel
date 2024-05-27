@@ -22,7 +22,6 @@ import java.util.List;
 public class FrontendServiceImpl implements FrontendService {
 
     private final RoomMapper roomMapper;
-    private final RoomReservationMapper roomReservationMapper;
     private final UserMapper userMapper;
     private final AirConditionerMapper airConditionerMapper;
     private final DetailedFeesMapper detailedFeesMapper;
@@ -39,7 +38,7 @@ public class FrontendServiceImpl implements FrontendService {
         long checkInTime = frontendFreeRoomDTO.getCheckInTime();
         long checkOutTime = frontendFreeRoomDTO.getCheckOutTime();
         // 查询已经预订的房间
-        List<String> reservedRooms = roomReservationMapper.selectReservedRooms(checkInTime, checkOutTime);
+        List<String> reservedRooms = null;
         // 查询所有对应类型的房间
         List<RoomDO> allRooms = roomMapper.selectByType(frontendFreeRoomDTO.getRoomType());
         // 可选房间集合
@@ -63,7 +62,7 @@ public class FrontendServiceImpl implements FrontendService {
         long checkInTime = frontendRegisterDTO.getCheckInTime();
         long checkOutTime = frontendRegisterDTO.getCheckOutTime();
         // 查询已经预订的房间
-        List<String> reservedRooms = roomReservationMapper.selectReservedRooms(checkInTime, checkOutTime);
+        List<String> reservedRooms = null;
         // 查询所有对应类型的房间
         List<RoomDO> allRooms = roomMapper.selectByType(frontendRegisterDTO.getRoomType());
         RoomDO firstRoom = allRooms.stream()
