@@ -49,12 +49,16 @@ public class RoomTask {
             // 在第2种情况下，回温超过2.00，在waitingQueue放出风请求
             AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
             if (airConditionerDO.isOpening() && roomDO.getCurrTemperature() - airConditionerDO.getTemperature() > 1.99) {
-                waitingQueueMapper.insert(WaitingQueueDO.builder()
-                        .acNumber(airConditionerDO.getAcNumber())
-                        .temperature(airConditionerDO.getTemperature())
-                        .windSpeed(airConditionerDO.getWindSpeed())
-                        .requestTime(System.currentTimeMillis())
-                        .build());
+                try {
+                    waitingQueueMapper.insert(WaitingQueueDO.builder()
+                            .acNumber(airConditionerDO.getAcNumber())
+                            .temperature(airConditionerDO.getTemperature())
+                            .windSpeed(airConditionerDO.getWindSpeed())
+                            .requestTime(System.currentTimeMillis())
+                            .build());
+                } catch (Exception e) {
+                    System.out.println("-_-");
+                }
             }
         }
     }
