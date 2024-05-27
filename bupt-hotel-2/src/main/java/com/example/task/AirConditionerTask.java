@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 空调降温，空调打开且分配了资源
+ */
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class AirConditionerTask {
         List<RoomDO> connectionList = roomDOs.stream()
                 .filter(roomDO -> {
                     AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
-                    return airConditionerDO.isConnecting() && roomDO.getCurrTemperature() > airConditionerDO.getTemperature();
+                    return airConditionerDO.isOpening() && airConditionerDO.isConnecting();
                 })
                 .toList();
         for (RoomDO roomDO : connectionList) {

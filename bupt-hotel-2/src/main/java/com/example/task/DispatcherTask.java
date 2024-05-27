@@ -33,45 +33,48 @@ public class DispatcherTask {
     public void dispatchConnections() {
         long currentTime = System.currentTimeMillis();
 
-        log.info("定时检查");
         List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
         System.out.println(runningQueue1);
         List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
         System.out.println(waitQueue1);
 
         List<RunningQueueDO> runningQueue = runningQueueMapper.getAll();
-        if (!runningQueue.isEmpty()) {
-            for (RunningQueueDO runningQueueDO : runningQueue) {
-                String acNumber = runningQueueDO.getAcNumber();
-                AirConditionerDO airConditionerDO = airConditionerMapper.select(acNumber);
-                // 1.时间片耗尽 2.已经降低到目标温度，更新空调状态，结算空调费用
-                long connectionTime = runningQueueDO.getConnectionTime();
-                double currTemperature = roomMapper.select(airConditionerDO.getRoomNumber()).getCurrTemperature();
-                boolean a = (currentTime - connectionTime) > SystemParam.TIME_SPLICE;
-                boolean b = Math.abs(currTemperature - airConditionerDO.getTemperature()) < SystemParam.TEMP_CHANGE_PER_SECOND.get(airConditionerDO.getWindSpeed()) / 2;
-                if (a || b) {
-                    // 断开连接，中央空调当前连接数 - 1
-                    SystemParam.CURR_CONNECTION_COUNT -= 1;
-                    // 时间片耗尽，移出运行表，移进等待表
-                    runningQueueMapper.delete(acNumber);
-                    if (!b) {
-                        waitingQueueMapper.insert(WaitingQueueDO.builder()
-                                .acNumber(acNumber)
-                                .windSpeed(airConditionerDO.getWindSpeed())
-                                .temperature(airConditionerDO.getTemperature())
-                                .requestTime(currentTime)
-                                .build());
-                    }
-                    DetailedFeesDO detailedFeesDO = CommonTool.getDetailedFeesDO(airConditionerDO);
-                    detailedFeesMapper.insert(detailedFeesDO);
-                    // 修改空调状态信息
-                    airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
-                    airConditionerDO.setConnecting(false);
-                    airConditionerDO.setConnectionTime(currentTime);
-                    airConditionerMapper.update(airConditionerDO);
+        for (RunningQueueDO runningQueueDO : runningQueue) {
+            String acNumber = runningQueueDO.getAcNumber();
+            AirConditionerDO airConditionerDO = airConditionerMapper.select(acNumber);
+            // 1.时间片耗尽 2.已经降低到目标温度，更新空调状态，结算空调费用
+            long connectionTime = runningQueueDO.getConnectionTime();
+            double currTemperature = roomMapper.select(airConditionerDO.getRoomNumber()).getCurrTemperature();
+            double targetTemperature = airConditionerDO.getTemperature();
+            boolean a = (currentTime - connectionTime) > SystemParam.TIME_SPLICE * 1000L;
+            boolean b = currTemperature <= targetTemperature;
+            if (a || b) {
+                if (a)
+                    System.out.println(acNumber + "时间片耗尽，释放资源");
+                if (b)
+                    System.out.println(acNumber + "降至目标温度，释放资源");
+                // 断开连接，中央空调当前连接数 - 1
+                SystemParam.CURR_CONNECTION_COUNT -= 1;
+                // 时间片耗尽，移出运行表，移进等待表
+                runningQueueMapper.delete(acNumber);
+                if (!b) {
+                    waitingQueueMapper.insert(WaitingQueueDO.builder()
+                            .acNumber(acNumber)
+                            .windSpeed(airConditionerDO.getWindSpeed())
+                            .temperature(airConditionerDO.getTemperature())
+                            .requestTime(currentTime)
+                            .build());
                 }
+                DetailedFeesDO detailedFeesDO = CommonTool.getDetailedFeesDO(airConditionerDO);
+                detailedFeesMapper.insert(detailedFeesDO);
+                // 修改空调状态信息
+                airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
+                airConditionerDO.setConnecting(false);
+                airConditionerDO.setConnectionTime(currentTime);
+                airConditionerMapper.update(airConditionerDO);
             }
         }
+
 
         List<WaitingQueueDO> waitQueue = waitingQueueMapper.getAll();
         // k 表示空闲资源个数
@@ -101,6 +104,7 @@ public class DispatcherTask {
                 airConditionerDO.setTemperature(waitingQueueDO.getTemperature());
                 airConditionerDO.setWindSpeed(waitingQueueDO.getWindSpeed());
                 airConditionerMapper.update(airConditionerDO);
+                System.out.println(acNumber + "获得资源");
             }
         }
     }

@@ -4,10 +4,7 @@ import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
 import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.WaitingQueueDO;
-import com.example.dao.mapper.AirConditionerMapper;
-import com.example.dao.mapper.DetailedFeesMapper;
-import com.example.dao.mapper.RunningQueueMapper;
-import com.example.dao.mapper.WaitingQueueMapper;
+import com.example.dao.mapper.*;
 import com.example.dto.UserUpdateDTO;
 import com.example.service.UserService;
 import com.example.utils.CommonTool;
@@ -24,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private final WaitingQueueMapper waitingQueueMapper;
     private final DetailedFeesMapper detailedFeesMapper;
     private final RunningQueueMapper runningQueueMapper;
+    private final RoomMapper roomMapper;
 
     @Override
     public void openOrClose(String acNumber) {
@@ -54,12 +52,14 @@ public class UserServiceImpl implements UserService {
         // 如果空调关着：需要打开，请求连接，更新空调信息
         if (!isOpening) {
             log.info("打开空调");
-            waitingQueueMapper.insert(WaitingQueueDO.builder()
-                    .acNumber(acNumber)
-                    .temperature(SystemParam.DEFAULT_TEMPERATURE)
-                    .windSpeed(SystemParam.DEFAULT_WIND_SPEED)
-                    .requestTime(System.currentTimeMillis())
-                    .build());
+            // 当前温度 - 目标温度 >= 2 的空调不分配资源
+            if (roomMapper.select(airConditionerDO.getRoomNumber()).getCurrTemperature() - airConditionerMapper.select(acNumber).getTemperature() > 1.99)
+                waitingQueueMapper.insert(WaitingQueueDO.builder()
+                        .acNumber(acNumber)
+                        .temperature(SystemParam.DEFAULT_TEMPERATURE)
+                        .windSpeed(SystemParam.DEFAULT_WIND_SPEED)
+                        .requestTime(System.currentTimeMillis())
+                        .build());
         }
 
         airConditionerDO.setOpening(!airConditionerDO.isOpening());

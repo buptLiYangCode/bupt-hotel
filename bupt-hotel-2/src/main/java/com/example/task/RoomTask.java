@@ -19,8 +19,9 @@ import static com.example.common.constant.SystemConstant.SECONDS_PER_MINUTE;
 
 
 /**
- * 1.空调关机且当前温度< 房间初始温度,需要回温
- * 2.降至目标温度后释放连接，当前温度 < 房间初始温度， 需要回温
+ * 1.空调关机且当前温度 < 房间初始温度，需要回温
+ * 2.降至目标温度后释放连接，当前温度 < 房间初始温度，需要回温....
+ * 在等待队列中的房间不能回温
  */
 @Component
 @Slf4j
@@ -36,7 +37,9 @@ public class RoomTask {
         List<RoomDO> roomDOList = roomDOs.stream()
                 .filter(roomDO -> {
                     AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
-                    return !airConditionerDO.isOpening() && roomDO.getCurrTemperature() < SystemParam.INITIAL_TEMP_TABLE.get(roomDO.getRoomNumber()) || airConditionerDO.isOpening() && !airConditionerDO.isConnecting() && roomDO.getCurrTemperature() < SystemParam.INITIAL_TEMP_TABLE.get(roomDO.getRoomNumber());
+                    boolean a = !airConditionerDO.isOpening() && roomDO.getCurrTemperature() < SystemParam.INITIAL_TEMP_TABLE.get(roomDO.getRoomNumber());
+                    boolean b = airConditionerDO.isOpening() && !airConditionerDO.isConnecting() && roomDO.getCurrTemperature() < SystemParam.INITIAL_TEMP_TABLE.get(roomDO.getRoomNumber()) && waitingQueueMapper.select(roomDO.getRoomNumber()) == null;
+                    return a || b;
                 })
                 .toList();
         for (RoomDO roomDO : roomDOList) {
@@ -45,7 +48,7 @@ public class RoomTask {
             System.out.printf("房间%s温度回升至%.2f%n", roomDO.getRoomNumber(), roomDO.getCurrTemperature());
             // 在第2种情况下，回温超过2.00，在waitingQueue放出风请求
             AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
-            if (airConditionerDO.isOpening() && roomDO.getCurrTemperature() - airConditionerDO.getTemperature() > 2.00) {
+            if (airConditionerDO.isOpening() && roomDO.getCurrTemperature() - airConditionerDO.getTemperature() > 1.99) {
                 waitingQueueMapper.insert(WaitingQueueDO.builder()
                         .acNumber(airConditionerDO.getAcNumber())
                         .temperature(airConditionerDO.getTemperature())
