@@ -64,6 +64,7 @@ public class SystemParam {
 
     public static HashMap<String, Double> INITIAL_TEMP_TABLE = new HashMap<>();
 
+    public static Double PRICE_PER_TEMP = 1.00;
     /*
     计价规则：一度一元
      */

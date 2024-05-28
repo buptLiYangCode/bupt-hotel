@@ -1,32 +1,27 @@
 package com.example.vo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminQueryVO {
     /*
     空调编号
      */
-    private long acNumber;
+    private String acNumber;
 
-    /*
-    空调模式：0表示制冷、1制热
-     */
-    private int mode;
+    private double currTemperature;
 
+    private double targetTemperature;
     /*
     空调风速
     */
     private int windSpeed;
-
-    /*
-    空调温度
-    */
-    private int temperature;
 
     /*
     当前旅客产生的费用
@@ -34,7 +29,7 @@ public class AdminQueryVO {
     private double currFee;
 
     /*
-    空调总费用
+    空调状态：0表示关闭，1表示打开未出风，2表示打开且出风
      */
-    private double totalFee;
+    private int flag;
 }

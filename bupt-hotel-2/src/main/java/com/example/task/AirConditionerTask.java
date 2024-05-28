@@ -1,9 +1,10 @@
 package com.example.task;
 
-import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
+import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.RoomDO;
 import com.example.dao.mapper.AirConditionerMapper;
+import com.example.dao.mapper.DetailedFeesMapper;
 import com.example.dao.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.example.common.SystemParam.PRICE_PER_TEMP;
+import static com.example.common.SystemParam.TEMP_CHANGE_PER_SECOND;
 
 /**
  * 空调降温，空调打开且分配了资源
@@ -22,7 +26,7 @@ import java.util.List;
 public class AirConditionerTask {
     private final AirConditionerMapper airConditionerMapper;
     private final RoomMapper roomMapper;
-
+    private final DetailedFeesMapper detailedFeesMapper;
 
     @Scheduled(fixedRate = 1000) // 每隔1000ms执行一次
     public void adjustTemperature() {
@@ -35,9 +39,27 @@ public class AirConditionerTask {
                 })
                 .toList();
         for (RoomDO roomDO : connectionList) {
-            roomDO.setCurrTemperature(roomDO.getCurrTemperature() - SystemParam.TEMP_CHANGE_PER_SECOND.get(airConditionerMapper.select(roomDO.getAcNumber()).getWindSpeed()));
+            Double tempChanged = TEMP_CHANGE_PER_SECOND.get(airConditionerMapper.select(roomDO.getAcNumber()).getWindSpeed());
+            roomDO.setCurrTemperature(roomDO.getCurrTemperature() - tempChanged);
             roomMapper.update(roomDO);
             System.out.printf("房间%s温度下降至%.2f%n", roomDO.getRoomNumber(), roomDO.getCurrTemperature());
+            // 更新费用
+            AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
+            double fee = PRICE_PER_TEMP * tempChanged;
+            airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + fee);
+            airConditionerMapper.update(airConditionerDO);
+            // 插入详单
+            long startTime = airConditionerDO.getConnectionTime();
+            long endTime = System.currentTimeMillis();
+            detailedFeesMapper.insert(DetailedFeesDO.builder()
+                    .acNumber(airConditionerDO.getAcNumber())
+                    .windSpeed(airConditionerDO.getWindSpeed())
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .minutes(1)
+                    .fee(fee)
+                    .feeRate(fee)
+                    .build());
         }
     }
 

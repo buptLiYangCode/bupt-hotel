@@ -1,5 +1,9 @@
 package com.example.service;
 
+import com.example.vo.AdminQueryVO;
+
+import java.util.List;
+
 public interface AdminService {
-    String query5();
+    List<AdminQueryVO> query5();
 }

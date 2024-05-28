@@ -2,11 +2,9 @@ package com.example.task;
 
 import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
-import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.RunningQueueDO;
 import com.example.dao.entity.WaitingQueueDO;
 import com.example.dao.mapper.*;
-import com.example.utils.CommonTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,10 +31,10 @@ public class DispatcherTask {
     public void dispatchConnections() {
         long currentTime = System.currentTimeMillis();
 
-        List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
-        System.out.println(runningQueue1);
-        List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
-        System.out.println(waitQueue1);
+//        List<RunningQueueDO> runningQueue1 = runningQueueMapper.getAll();
+//        System.out.println(runningQueue1);
+//        List<WaitingQueueDO> waitQueue1 = waitingQueueMapper.getAll();
+//        System.out.println(waitQueue1);
 
         List<RunningQueueDO> runningQueue = runningQueueMapper.getAll();
         for (RunningQueueDO runningQueueDO : runningQueue) {
@@ -65,10 +63,7 @@ public class DispatcherTask {
                             .requestTime(currentTime)
                             .build());
                 }
-                DetailedFeesDO detailedFeesDO = CommonTool.getDetailedFeesDO(airConditionerDO);
-                detailedFeesMapper.insert(detailedFeesDO);
                 // 修改空调状态信息
-                airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
                 airConditionerDO.setConnecting(false);
                 airConditionerDO.setConnectionTime(currentTime);
                 airConditionerMapper.update(airConditionerDO);

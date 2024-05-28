@@ -56,7 +56,7 @@ public class AdminController {
      * @return 某个时刻5个房间的状态
      */
     @GetMapping("/admin/query")
-    public Result<String> query5() {
+    public Result<List<AdminQueryVO>> query5() {
         //
         return Results.success(adminService.query5());
     }

@@ -2,12 +2,10 @@ package com.example.service.impl;
 
 import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
-import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.WaitingQueueDO;
 import com.example.dao.mapper.*;
 import com.example.dto.UserUpdateDTO;
 import com.example.service.UserService;
-import com.example.utils.CommonTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,14 +34,11 @@ public class UserServiceImpl implements UserService {
         if (isOpening) {
             if (isConnecting) {
                 log.info("关闭空调{}，释放空调连接", acNumber);
-                DetailedFeesDO detailedFeesDO = CommonTool.getDetailedFeesDO(airConditionerDO);
-                detailedFeesMapper.insert(detailedFeesDO);
                 // 释放资源，更新空调信息，系统当前连接数 -1
                 SystemParam.CURR_CONNECTION_COUNT -= 1;
                 runningQueueMapper.delete(acNumber);
 
                 airConditionerDO.setConnecting(false);
-                airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
             } else {
                 log.info("关闭空调{}，从等待队列中移出", acNumber);
                 waitingQueueMapper.delete(acNumber);
@@ -89,12 +84,9 @@ public class UserServiceImpl implements UserService {
         long currentTime = System.currentTimeMillis();
         if (isConnecting) {
             log.info("空调{}正在出风，更新温度为{}，风速为{}", userUpdateDTO.getAcNumber(), userUpdateDTO.getTargetTemperature(), userUpdateDTO.getTargetWindSpeed());
-            DetailedFeesDO detailedFeesDO = CommonTool.getDetailedFeesDO(airConditionerDO);
-            detailedFeesMapper.insert(detailedFeesDO);
             // 更新空调信息
             airConditionerDO.setTemperature(userUpdateDTO.getTargetTemperature());
             airConditionerDO.setWindSpeed(userUpdateDTO.getTargetWindSpeed());
-            airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + detailedFeesDO.getFee());
             airConditionerMapper.update(airConditionerDO);
         } else {
             log.info("空调{}没有出风，更新等待队列中的记录", userUpdateDTO.getAcNumber());

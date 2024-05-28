@@ -12,8 +12,8 @@ import java.util.List;
 @Mapper
 public interface DetailedFeesMapper {
 
-    @Insert("INSERT INTO t_detailed_fees (ac_number, wind_speed, start_time, end_time, seconds, fee, fee_rate) " +
-            "VALUES (#{acNumber}, #{windSpeed}, #{startTime}, #{endTime}, #{seconds}, #{fee}, #{feeRate})")
+    @Insert("INSERT INTO t_detailed_fees (ac_number, wind_speed, start_time, end_time, minutes, fee, fee_rate) " +
+            "VALUES (#{acNumber}, #{windSpeed}, #{startTime}, #{endTime}, #{minutes}, #{fee}, #{feeRate})")
     void insert(DetailedFeesDO detailedFeesDO);
 
     @Select("select * from t_detailed_fees where room_number = #{roomNumber} and start_time > #{checkInTime} and start_time < #{checkOutTime}")
