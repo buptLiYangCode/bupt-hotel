@@ -1,31 +1,106 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>API Query</title>
+    <title>AC Room Data</title>
     <style>
-        #output {
-            white-space: pre-wrap;
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .running {
+            background-color: lightgreen;
+        }
+        .standby {
+            background-color: lightcoral;
         }
     </style>
 </head>
 <body>
-<h1>API Query</h1>
+<h1>AC Room Data</h1>
+<table id="dataTable">
+    <thead>
+    <tr>
+        <th>Query Number</th>
+        <th colspan="4">AC#1-01</th>
+        <th colspan="4">AC#1-02</th>
+        <th colspan="4">AC#1-03</th>
+        <th colspan="4">AC#1-04</th>
+        <th colspan="4">AC#1-05</th>
+    </tr>
+    <tr>
+        <th></th>
+        <th>Current</th>
+        <th>Target</th>
+        <th>Wind Speed</th>
+        <th>Fee</th>
+        <th>Current</th>
+        <th>Target</th>
+        <th>Wind Speed</th>
+        <th>Fee</th>
+        <th>Current</th>
+        <th>Target</th>
+        <th>Wind Speed</th>
+        <th>Fee</th>
+        <th>Current</th>
+        <th>Target</th>
+        <th>Wind Speed</th>
+        <th>Fee</th>
+        <th>Current</th>
+        <th>Target</th>
+        <th>Wind Speed</th>
+        <th>Fee</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
 <div id="output"></div>
 
 <script>
     let count = 0;
     const outputDiv = document.getElementById('output');
+    const tableBody = document.querySelector('#dataTable tbody');
 
     function queryAPI() {
         fetch('http://localhost:8066/admin/query')
             .then(response => response.text())
             .then(data => {
                 count++;
-                const output = `Query #${count}: ${data}`;
-                outputDiv.textContent += output + '\n';
+
+                const parsedData = JSON.parse(data);
+                if (parsedData.success) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>Query #${count}</td>
+                            ${parsedData.data.map(room => `
+                                <td class="${getClassByFlag(room.flag)}">${room.currTemperature}</td>
+                                <td class="${getClassByFlag(room.flag)}">${room.targetTemperature}</td>
+                                <td class="${getClassByFlag(room.flag)}">${room.windSpeed}</td>
+                                <td class="${getClassByFlag(room.flag)}">${room.currFee}</td>
+                            `).join('')}
+                        `;
+                    tableBody.appendChild(row);
+                }
             })
-            .catch(error => outputDiv.textContent += `Error: ${error}\n`);
+    }
+
+    function getClassByFlag(flag) {
+        switch (flag) {
+            case 2:
+                return 'running';
+            case 1:
+                return 'standby';
+            default:
+                return '';
+        }
     }
 
     setInterval(queryAPI, 2000);
