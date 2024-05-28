@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>旅客账单查询</title>
+</head>
+<body>
+<h1>旅客账单查询</h1>
+<form id="billForm" onsubmit="getBill(); return false;">
+  <label for="username">姓名:</label>
+  <input type="text" id="username" name="username" required><br><br>
+
+  <label for="idCard">身份证号:</label>
+  <input type="text" id="idCard" name="idCard" required><br><br>
+
+  <label for="roomNumber">房间号:</label>
+  <input type="text" id="roomNumber" name="roomNumber" required><br><br>
+
+  <label for="roomPassword">房间密码:</label>
+  <input type="password" id="roomPassword" name="roomPassword" required><br><br>
+
+  <input type="submit" value="查询账单">
+</form>
+
+<div id="billInfo" style="display: none;">
+  <h2>账单信息</h2>
+  <table border="1">
+    <tr>
+      <th>房间单价</th>
+      <th>入住时间</th>
+      <th>住宿天数</th>
+      <th>房费</th>
+      <th>空调费</th>
+      <th>总费用</th>
+    </tr>
+    <tr id="billRow"></tr>
+  </table>
+</div>
+
+<script>
+  function getBill() {
+    var form = document.getElementById("billForm");
+    var formData = new FormData(form);
+    var jsonData = {};
+
+    for (var pair of formData.entries()) {
+      jsonData[pair[0]] = pair[1];
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:8066/frontend/bill");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText).data;
+          if (data !== null) {
+            displayBill(data);
+          } else {
+            alert("输入的信息有误，请检查并重新输入。");
+          }
+        } else {
+          alert("发生错误，请稍后再试。");
+        }
+      }
+    };
+    xhr.send(JSON.stringify(jsonData));
+  }
+
+  function displayBill(data) {
+    var billRow = document.getElementById("billRow");
+    billRow.innerHTML = `
+                <td>${data.roomPrice}</td>
+                <td>${new Date(data.startTime).toLocaleDateString()}</td>
+                <td>${data.days}</td>
+                <td>${data.roomFee}</td>
+                <td>${data.airConditionerFee}</td>
+                <td>${data.totalFee}</td>
+            `;
+
+    document.getElementById("billInfo").style.display = "block";
+  }
+</script>
+</body>
+</html>
