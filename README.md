@@ -1,1 +1,1 @@
-##bupt-hotel
+bupt-hotel
