@@ -30,6 +30,11 @@ public class RoomDO {
     private int roomType;
 
     /*
+    房间是否有人住
+     */
+    private boolean emptyy;
+
+    /*
     房间当前的温度
      */
     private double currTemperature;

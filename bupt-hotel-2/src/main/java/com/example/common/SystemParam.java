@@ -64,11 +64,9 @@ public class SystemParam {
 
     public static HashMap<String, Double> INITIAL_TEMP_TABLE = new HashMap<>();
 
+    public static HashMap<String, Double> ROOM_PRICE_TABLE = new HashMap<>();
+
     public static Double PRICE_PER_TEMP = 1.00;
-    /*
-    计价规则：一度一元
-     */
-    public static double PRICE = 1.00;
 
     static {
         TEMP_CHANGE_PER_SECOND.add(0.00);
@@ -81,5 +79,11 @@ public class SystemParam {
         INITIAL_TEMP_TABLE.put("1-03", 30.00);
         INITIAL_TEMP_TABLE.put("1-04", 29.00);
         INITIAL_TEMP_TABLE.put("1-05", 35.00);
+
+        ROOM_PRICE_TABLE.put("1-01", 100.00);
+        ROOM_PRICE_TABLE.put("1-02", 125.00);
+        ROOM_PRICE_TABLE.put("1-03", 150.00);
+        ROOM_PRICE_TABLE.put("1-04", 200.00);
+        ROOM_PRICE_TABLE.put("1-05", 100.00);
     }
 }

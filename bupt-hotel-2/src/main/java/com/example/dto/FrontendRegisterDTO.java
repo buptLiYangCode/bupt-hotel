@@ -32,16 +32,9 @@ public class FrontendRegisterDTO {
     房间类型
     */
     private int roomType;
+
     /*
-    房间号
+    入住天数
      */
-    private String roomNumber;
-    /*
-    入住时间
-     */
-    private long checkInTime;
-    /*
-    退房时间
-     */
-    private long checkOutTime;
+    private int days;
 }

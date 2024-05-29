@@ -68,17 +68,19 @@
     let count = 0;
     const outputDiv = document.getElementById('output');
     const tableBody = document.querySelector('#dataTable tbody');
+    let previousData = null;
 
     function queryAPI() {
         fetch('http://localhost:8066/admin/query')
             .then(response => response.text())
             .then(data => {
-                count++;
-
                 const parsedData = JSON.parse(data);
                 if (parsedData.success) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
+                    if (JSON.stringify(parsedData.data) !== JSON.stringify(previousData)) {
+                        count++;
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
                             <td>Query #${count}</td>
                             ${parsedData.data.map(room => `
                                 <td class="${getClassByFlag(room.flag)}">${room.currTemperature}</td>
@@ -87,7 +89,12 @@
                                 <td class="${getClassByFlag(room.flag)}">${room.currFee}</td>
                             `).join('')}
                         `;
-                    tableBody.appendChild(row);
+                        tableBody.appendChild(row);
+                        previousData = parsedData.data;
+                    } else {
+                        outputDiv.innerHTML = 'Query completed, restarting from Query 0';
+                        count = 0;
+                    }
                 }
             })
     }

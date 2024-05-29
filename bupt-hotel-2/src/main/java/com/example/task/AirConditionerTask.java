@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.example.common.SystemParam.PRICE_PER_TEMP;
 import static com.example.common.SystemParam.TEMP_CHANGE_PER_SECOND;
+import static com.example.common.constant.SystemConstant.SECONDS_PER_MINUTE;
 
 /**
  * 空调降温，空调打开且分配了资源
@@ -49,16 +50,16 @@ public class AirConditionerTask {
             airConditionerDO.setCurrFee(airConditionerDO.getCurrFee() + fee);
             airConditionerMapper.update(airConditionerDO);
             // 插入详单
-            long startTime = airConditionerDO.getConnectionTime();
             long endTime = System.currentTimeMillis();
+            long startTime = endTime - 1000;
             detailedFeesMapper.insert(DetailedFeesDO.builder()
                     .acNumber(airConditionerDO.getAcNumber())
                     .windSpeed(airConditionerDO.getWindSpeed())
                     .startTime(startTime)
                     .endTime(endTime)
-                    .minutes(1)
+                    .minutes(1.00 / SECONDS_PER_MINUTE)
                     .fee(fee)
-                    .feeRate(fee)
+                    .feeRate(fee * SECONDS_PER_MINUTE)
                     .build());
         }
     }

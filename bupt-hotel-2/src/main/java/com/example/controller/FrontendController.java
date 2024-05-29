@@ -2,19 +2,14 @@ package com.example.controller;
 
 import com.example.common.result.Result;
 import com.example.common.result.Results;
-import com.example.dto.FrontendDetailFeesDTO;
-import com.example.dto.FrontendFreeRoomDTO;
+import com.example.dao.entity.DetailedFeesDO;
 import com.example.dto.FrontendRegisterDTO;
 import com.example.dto.FrontendSettleBillDTO;
 import com.example.service.FrontendService;
-import com.example.vo.FrontendDetailFeesVO;
 import com.example.vo.FrontendRegisterVO;
 import com.example.vo.FrontendSettleBillVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,13 +24,12 @@ public class FrontendController {
     private final FrontendService frontendService;
 
     /**
-     * 查询某个【时间段】是否有某种类型【0：标准间 1：大床房】空闲房间
-     * @param freeRoomReqDTO 房间类型、入住时间、离开时间
+     * 查询有无空闲房间
      * @return t / f 返回结果给前台
      */
     @GetMapping("/frontend/free-room")
-    public Result<Boolean> getFreeRoom(@RequestBody FrontendFreeRoomDTO freeRoomReqDTO) {
-        boolean frontendFreeRoomRespDTO = frontendService.getFreeRoom(freeRoomReqDTO);
+    public Result<Boolean> query() {
+        boolean frontendFreeRoomRespDTO = frontendService.query();
         return Results.success(frontendFreeRoomRespDTO);
     }
 
@@ -55,21 +49,21 @@ public class FrontendController {
      * @param frontendSettleBillDTO 旅客姓名、身份证号、房间号、房间密码
      * @return 费用简洁单
      */
-    @GetMapping("/frontend/bill")
+    @PostMapping("/frontend/bill")
     public Result<FrontendSettleBillVO> settleBill(@RequestBody FrontendSettleBillDTO frontendSettleBillDTO) {
         FrontendSettleBillVO frontendSettleBillVO = frontendService.settleBill(frontendSettleBillDTO);
-        return Results.success(null);
+        return Results.success(frontendSettleBillVO);
     }
 
     /**
      * 查询旅客住宿时间段内的空调详细计费记录
      *
-     * @param frontendDetailFeesDTO 房间号、入住时间、离开时间
+     * @param idCard 身份证号
      * @return 空调费用详细单
      */
     @GetMapping("/frontend/ac-bill")
-    public Result<List<FrontendDetailFeesVO>> getDetailFees(@RequestBody FrontendDetailFeesDTO frontendDetailFeesDTO) {
-        List<FrontendDetailFeesVO> frontendDetailFeesVO = frontendService.getDetailFees(frontendDetailFeesDTO);
+    public Result<List<DetailedFeesDO>> getDetailFees(@RequestParam String idCard) {
+        List<DetailedFeesDO> frontendDetailFeesVO = frontendService.getDetailFees(idCard);
         return Results.success(frontendDetailFeesVO);
     }
 }

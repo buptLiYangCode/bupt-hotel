@@ -37,7 +37,7 @@ public class DetailedFeesDO {
     /*
     分钟数
      */
-    private long minutes;
+    private double minutes;
 
     /*
     该段时间费用

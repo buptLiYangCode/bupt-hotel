@@ -4,6 +4,7 @@ import com.example.common.result.Result;
 import com.example.common.result.Results;
 import com.example.dto.UserUpdateDTO;
 import com.example.service.UserService;
+import com.example.vo.UserQueryVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class UserController {
 
     /**
      * 旅客打开、关闭空调
+     *
      * @return 后台返回操作结果
      */
     @PutMapping("/user/air-conditioner/open-or-close")
@@ -28,11 +30,18 @@ public class UserController {
 
     /**
      * 旅客更新空调温度
+     *
      * @return 后台返回操作结果
      */
     @PutMapping("/user/air-conditioner/update")
     public Result<Void> update(@RequestBody UserUpdateDTO userUpdateDTO) {
         userService.update(userUpdateDTO);
         return Results.success();
+    }
+
+    @GetMapping("/user/air-conditioner")
+    public Result<UserQueryVO> query(@RequestParam String acNumber) {
+        UserQueryVO userQueryVO = userService.query(acNumber);
+        return Results.success(userQueryVO);
     }
 }

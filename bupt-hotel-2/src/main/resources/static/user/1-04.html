@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1-04</title>
+    <style>
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>空调遥控器 1-04</h2>
+    <button id="powerButton">open_or_close</button>
+    <input type="number" id="temperature" placeholder="设置温度 (18-28)" min="18" max="28" value="25">
+    <input type="number" id="windSpeed" placeholder="设置风速 (1-3)" min="1" max="3" value="2">
+    <button id="updateButton">update</button>
+    <div id="acInfo"></div>
+</div>
+
+<script>
+    const acNumber = '1-04';
+    const powerButton = document.getElementById('powerButton');
+    const temperature = document.getElementById('temperature');
+    const windSpeed = document.getElementById('windSpeed');
+    const updateButton = document.getElementById('updateButton');
+
+    function fetchAcData(acNumber) {
+        return fetch(`http://localhost:8066/user/air-conditioner?acNumber=${acNumber}`)
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error:', error);
+                alert('发生错误');
+            });
+    }
+
+    function updateAcInfo(data) {
+        console.log(data)
+        data = data.data;
+        const acInfoDiv = document.getElementById('acInfo');
+
+        acInfoDiv.innerHTML = `
+            <table style="border: 1px solid black; border-collapse: collapse;">
+                <tr>
+                    <th style="border: 1px solid black; padding: 5px;">目标温度</th>
+                    <th style="border: 1px solid black; padding: 5px;">当前温度</th>
+                    <th style="border: 1px solid black; padding: 5px;">风速</th>
+                    <th style="border: 1px solid black; padding: 5px;">费用</th>
+                    <td style="border: 1px solid black; padding: 5px;">状态</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 5px;">${data.targetTemperature}°C</td>
+                    <td style="border: 1px solid black; padding: 5px;">${data.currTemperature}°C</td>
+                    <td style="border: 1px solid black; padding: 5px;">${data.windSpeed}</td>
+                    <td style="border: 1px solid black; padding: 5px;">${data.fee}元</td>
+                    <td colspan="4" style="border: 1px solid black; padding: 5px;">${data.flag === 1 ? '等待中' : (data.flag === 2 ? '运行中' : '空调关闭')}</td>
+                </tr>
+            </table>
+        `;
+
+    }
+
+
+    powerButton.addEventListener('click', () => {
+
+        fetch(`http://localhost:8066/user/air-conditioner/open-or-close?acNumber=${acNumber}`, {
+            method: 'PUT'
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('操作成功');
+                } else {
+                    alert('操作失败');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('发生错误');
+            });
+
+    });
+
+    setInterval(() => {
+        fetchAcData(acNumber)
+            .then(data => updateAcInfo(data));
+    }, 2000);
+
+    updateButton.addEventListener('click', () => {
+        const temperatureValue = temperature.value;
+        const windSpeedValue = windSpeed.value;
+
+
+        const data = {
+            acNumber: acNumber,
+            targetTemperature: temperatureValue,
+            targetWindSpeed: windSpeedValue
+        };
+
+        fetch('http://localhost:8066/user/air-conditioner/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('操作成功');
+                } else {
+                    alert('操作失败');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('发生错误');
+            });
+    });
+</script>
+</body>
+</html>

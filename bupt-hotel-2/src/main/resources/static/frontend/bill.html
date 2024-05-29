@@ -38,6 +38,24 @@
   </table>
 </div>
 
+<button onclick="getACBill()">查询空调详单</button>
+
+<div id="acBillInfo" style="display: none;">
+  <h2>空调详单</h2>
+  <table border="1">
+    <tr>
+      <th>空调编号</th>
+      <th>风速</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th>分钟数</th>
+      <th>费用</th>
+      <th>费率</th>
+    </tr>
+    <tbody id="acBillTable"></tbody>
+  </table>
+</div>
+
 <script>
   function getBill() {
     var form = document.getElementById("billForm");
@@ -68,6 +86,27 @@
     xhr.send(JSON.stringify(jsonData));
   }
 
+  function getACBill() {
+    var idCard = document.getElementById("idCard").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:8066/frontend/ac-bill?idCard=" + idCard);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          var acBillData = JSON.parse(xhr.responseText).data;
+          if (acBillData !== null) {
+            displayACBill(acBillData);
+          } else {
+            alert("未找到相关记录。");
+          }
+        } else {
+          alert("发生错误，请稍后再试。");
+        }
+      }
+    };
+    xhr.send();
+  }
+
   function displayBill(data) {
     var billRow = document.getElementById("billRow");
     billRow.innerHTML = `
@@ -80,6 +119,22 @@
             `;
 
     document.getElementById("billInfo").style.display = "block";
+  }
+
+  function displayACBill(acBillData) {
+    var acBillTable = document.getElementById("acBillTable");
+    acBillTable.innerHTML = "";
+    acBillData.forEach(function(acRecord) {
+      var row = acBillTable.insertRow();
+      row.insertCell().textContent = acRecord.acNumber;
+      row.insertCell().textContent = acRecord.windSpeed;
+      row.insertCell().textContent = new Date(acRecord.startTime).toLocaleString();
+      row.insertCell().textContent = new Date(acRecord.endTime).toLocaleString();
+      row.insertCell().textContent = acRecord.minutes.toFixed(2);
+      row.insertCell().textContent = acRecord.fee.toFixed(2);
+      row.insertCell().textContent = acRecord.feeRate;
+    });
+    document.getElementById("acBillInfo").style.display = "block";
   }
 </script>
 </body>

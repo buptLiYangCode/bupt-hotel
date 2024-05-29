@@ -2,13 +2,18 @@ package com.example.service.impl;
 
 import com.example.common.SystemParam;
 import com.example.dao.entity.AirConditionerDO;
+import com.example.dao.entity.RoomDO;
+import com.example.dao.entity.RunningQueueDO;
 import com.example.dao.entity.WaitingQueueDO;
 import com.example.dao.mapper.*;
 import com.example.dto.UserUpdateDTO;
 import com.example.service.UserService;
+import com.example.vo.UserQueryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -23,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void openOrClose(String acNumber) {
+        if (acNumber.charAt(0) != 'A') acNumber = "AC#" + acNumber;
         AirConditionerDO airConditionerDO = airConditionerMapper.select(acNumber);
         boolean workable = airConditionerDO.isWorkable();
         boolean isOpening = airConditionerDO.isOpening();
@@ -70,6 +76,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void update(UserUpdateDTO userUpdateDTO) {
+        if (userUpdateDTO.getAcNumber().charAt(0) != 'A')
+            userUpdateDTO.setAcNumber("AC#" + userUpdateDTO.getAcNumber());
         AirConditionerDO airConditionerDO = airConditionerMapper.select(userUpdateDTO.getAcNumber());
         boolean workable = airConditionerDO.isWorkable();
         boolean isOpening = airConditionerDO.isOpening();
@@ -102,6 +110,24 @@ public class UserServiceImpl implements UserService {
             waitingQueueDO.setRequestTime(currentTime);
             waitingQueueMapper.insert(waitingQueueDO);
         }
+    }
+
+    @Override
+    public UserQueryVO query(String acNumber) {
+        AirConditionerDO airConditionerDO = airConditionerMapper.select("AC#" + acNumber);
+        RoomDO roomDO = roomMapper.select(airConditionerDO.getRoomNumber());
+        int flag = 0;
+        List<String> waitingList = waitingQueueMapper.getAll().stream()
+                .map(WaitingQueueDO::getAcNumber)
+                .toList();
+        List<String> runningList = runningQueueMapper.getAll().stream()
+                .map(RunningQueueDO::getAcNumber)
+                .toList();
+        if (runningList.contains(acNumber))
+            flag = 2;
+        if (waitingList.contains(acNumber))
+            flag = 1;
+        return new UserQueryVO(airConditionerDO.getTemperature(), roomDO.getCurrTemperature(), airConditionerDO.getWindSpeed(), airConditionerDO.getCurrFee(), flag);
     }
 
 }

@@ -1,21 +1,27 @@
 package com.example.service.impl;
 
 import com.example.dao.entity.AirConditionerDO;
+import com.example.dao.entity.DetailedFeesDO;
 import com.example.dao.entity.RoomDO;
 import com.example.dao.entity.UserDO;
-import com.example.dao.mapper.*;
-import com.example.dto.FrontendDetailFeesDTO;
-import com.example.dto.FrontendFreeRoomDTO;
+import com.example.dao.mapper.AirConditionerMapper;
+import com.example.dao.mapper.DetailedFeesMapper;
+import com.example.dao.mapper.RoomMapper;
+import com.example.dao.mapper.UserMapper;
 import com.example.dto.FrontendRegisterDTO;
 import com.example.dto.FrontendSettleBillDTO;
 import com.example.service.FrontendService;
-import com.example.vo.FrontendDetailFeesVO;
 import com.example.vo.FrontendRegisterVO;
 import com.example.vo.FrontendSettleBillVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import static com.example.common.SystemParam.ROOM_PRICE_TABLE;
 
 @Service
 @RequiredArgsConstructor
@@ -27,25 +33,18 @@ public class FrontendServiceImpl implements FrontendService {
     private final DetailedFeesMapper detailedFeesMapper;
 
     /**
-     * 查询某个【时间段】是否有某种类型【0：标准间 1：大床房】空闲房间
+     * 查询有无空闲房间
      *
-     * @param frontendFreeRoomDTO 房间类型、入住时间、离开时间
      * @return t / f 返回结果给前台
      */
     @Override
-    public boolean getFreeRoom(FrontendFreeRoomDTO frontendFreeRoomDTO) {
-        // 给旅客分配房间
-        long checkInTime = frontendFreeRoomDTO.getCheckInTime();
-        long checkOutTime = frontendFreeRoomDTO.getCheckOutTime();
-        // 查询已经预订的房间
-        List<String> reservedRooms = null;
-        // 查询所有对应类型的房间
-        List<RoomDO> allRooms = roomMapper.selectByType(frontendFreeRoomDTO.getRoomType());
-        // 可选房间集合
-        List<RoomDO> collect = allRooms.stream()
-                .filter(r -> !reservedRooms.contains(r.getRoomNumber()))
-                .toList();
-        return collect.size() > 0;
+    public boolean query() {
+        LinkedList<RoomDO> roomDOS = roomMapper.getAll();
+        for (RoomDO roomDO : roomDOS) {
+            if (roomDO.isEmptyy())
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -56,21 +55,21 @@ public class FrontendServiceImpl implements FrontendService {
      */
     @Override
     public FrontendRegisterVO register(FrontendRegisterDTO frontendRegisterDTO) {
-        // 将旅客信息存储进数据库
-        userMapper.insert(frontendRegisterDTO);
-        // 给旅客分配房间
-        long checkInTime = frontendRegisterDTO.getCheckInTime();
-        long checkOutTime = frontendRegisterDTO.getCheckOutTime();
-        // 查询已经预订的房间
-        List<String> reservedRooms = null;
-        // 查询所有对应类型的房间
-        List<RoomDO> allRooms = roomMapper.selectByType(frontendRegisterDTO.getRoomType());
-        RoomDO firstRoom = allRooms.stream()
-                .filter(r -> !reservedRooms.contains(r.getRoomNumber()))
+        LinkedList<RoomDO> roomDOS = roomMapper.getAll();
+        RoomDO roomDO = roomDOS.stream()
+                .filter(RoomDO::isEmptyy)
                 .toList().get(0);
+        UserDO userDO = new UserDO();
+        BeanUtils.copyProperties(frontendRegisterDTO, userDO);
+        userDO.setCheckInTime(System.currentTimeMillis());
+        userDO.setRoomNumber(roomDO.getRoomNumber());
+        // 将旅客信息存储进数据库
+        userMapper.insert(userDO);
+        roomMapper.updateEmptyy(roomDO.getRoomNumber(), false);
+
         return FrontendRegisterVO.builder()
-                .roomNumber(firstRoom.getRoomNumber())
-                .password(firstRoom.getRoomPassword())
+                .roomNumber(roomDO.getRoomNumber())
+                .password(roomDO.getRoomPassword())
                 .build();
     }
 
@@ -88,35 +87,63 @@ public class FrontendServiceImpl implements FrontendService {
         RoomDO roomDO = roomMapper.select(frontendSettleBillDTO.getRoomNumber());
         // 查询空调信息
         AirConditionerDO airConditionerDO = airConditionerMapper.select(roomDO.getAcNumber());
-        if (!roomDO.getRoomPassword().equals(frontendSettleBillDTO.getRoomPassword())) {
+        if (!roomDO.getRoomPassword().equals(frontendSettleBillDTO.getRoomPassword()))
             return null;
-        }
+
         // 密码校验完毕，开始结账
-        double roomPrice = 1;
-        int days = (int)(userDO.getCheckOutTime() - userDO.getCheckInTime()) / 1000 / 3600 / 24;
+        double roomPrice = ROOM_PRICE_TABLE.get(roomDO.getRoomNumber());
+        int days = userDO.getDays();
         double roomFee = roomPrice * days;
         double airConditionerFee = airConditionerDO.getCurrFee();
-        airConditionerMapper.update(AirConditionerDO.builder()
-                .acNumber(roomDO.getAcNumber())
-                .currFee(0.00)
-                .build());
+        userMapper.update(userDO.getIdCard(), System.currentTimeMillis());
         return FrontendSettleBillVO.builder()
                 .roomPrice(roomPrice)
+                .startTime(userDO.getCheckInTime())
                 .days(days)
                 .roomFee(roomFee)
                 .airConditionerFee(airConditionerFee)
-                .totalFee(roomFee+airConditionerFee)
+                .totalFee(roomFee + airConditionerFee)
                 .build();
     }
 
     /**
      * 查询旅客住宿时间段内的空调详细计费记录
      *
-     * @param frontendDetailFeesDTO 房间号、入住时间、离开时间
+     * @param idCard 身份证号
      * @return 空调费用详细单
      */
     @Override
-    public List<FrontendDetailFeesVO> getDetailFees(FrontendDetailFeesDTO frontendDetailFeesDTO) {
-        return detailedFeesMapper.select(frontendDetailFeesDTO);
+    public List<DetailedFeesDO> getDetailFees(String idCard) {
+        UserDO userDO = userMapper.select(idCard);
+        String acNumber = roomMapper.select(userDO.getRoomNumber()).getAcNumber();
+        List<DetailedFeesDO> detailedFeesDOS = detailedFeesMapper.select(acNumber);
+        return mergeByStartTime(detailedFeesDOS);
+    }
+
+    public List<DetailedFeesDO> mergeByStartTime(List<DetailedFeesDO> records) {
+        List<DetailedFeesDO> mergedRecords = new ArrayList<>();
+        DetailedFeesDO currentRecord = null;
+        for (DetailedFeesDO record : records) {
+            if (currentRecord == null) {
+                currentRecord = record;
+            } else if (currentRecord.getWindSpeed() == record.getWindSpeed() &&
+                    record.getStartTime() - currentRecord.getEndTime() < 100L) {
+                // 合并记录
+                currentRecord.setEndTime(record.getEndTime());
+                currentRecord.setMinutes(currentRecord.getMinutes() + record.getMinutes());
+                currentRecord.setFee(currentRecord.getFee() + record.getFee());
+            } else {
+                // 添加当前记录到合并后的列表中
+                mergedRecords.add(currentRecord);
+                currentRecord = record;
+            }
+        }
+
+        // 添加最后一个记录
+        if (currentRecord != null) {
+            mergedRecords.add(currentRecord);
+        }
+
+        return mergedRecords;
     }
 }

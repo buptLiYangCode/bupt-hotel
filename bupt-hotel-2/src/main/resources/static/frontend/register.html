@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店管理系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        form {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<h1>酒店管理系统</h1>
+<button id="checkRoomBtn">查询空闲房间</button>
+
+<form id="registerForm">
+    <label for="name">旅客姓名:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="age">旅客年龄:</label>
+    <input type="number" id="age" name="age" required><br>
+
+    <label for="idCard">旅客身份证号:</label>
+    <input type="text" id="idCard" name="idCard" required><br>
+
+    <label for="phone">旅客手机号:</label>
+    <input type="text" id="phone" name="phone" required><br>
+
+    <label for="sex">旅客性别:</label>
+    <input type="number" id="sex" name="sex" required><br>
+
+    <label for="roomType">房间类型:</label>
+    <input type="number" id="roomType" name="roomType" required><br>
+
+    <label for="days">入住天数:</label>
+    <input type="number" id="days" name="days" required><br>
+
+    <button type="button" id="registerBtn">登记入住</button>
+</form>
+
+<script>
+    const checkRoomBtn = document.getElementById('checkRoomBtn');
+    const registerForm = document.getElementById('registerForm');
+    const registerBtn = document.getElementById('registerBtn');
+
+    checkRoomBtn.addEventListener('click', () => {
+        fetch('http://localhost:8066/frontend/free-room')
+            .then(response => response.json())
+            .then(data => {
+                if (data === false) {
+                    alert('房间住满了');
+                } else {
+                    registerForm.style.display = 'block';
+                }
+            })
+            .catch(error => console.error(error));
+    });
+
+    registerBtn.addEventListener('click', () => {
+        const name = document.getElementById('name').value;
+        const age = document.getElementById('age').value;
+        const idCard = document.getElementById('idCard').value;
+        const phone = document.getElementById('phone').value;
+        const gender = document.getElementById('sex').value;
+        const roomType = document.getElementById('roomType').value;
+        const days = document.getElementById('days').value;
+
+        const data = {
+            name,
+            age,
+            idCard,
+            phone,
+            gender,
+            roomType,
+            days
+        };
+        fetch('http://localhost:8066/frontend/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(`房间号: ${data.data.roomNumber}, 房间密码: ${data.data.password}`);
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+</body>
+</html>
