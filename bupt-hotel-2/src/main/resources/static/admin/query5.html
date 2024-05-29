@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AC Room Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监控</title>
     <style>
         table {
             border-collapse: collapse;
@@ -24,7 +26,7 @@
     </style>
 </head>
 <body>
-<h1>AC Room Data</h1>
+<h1>监控界面</h1>
 <table id="dataTable">
     <thead>
     <tr>
@@ -92,7 +94,7 @@
                         tableBody.appendChild(row);
                         previousData = parsedData.data;
                     } else {
-                        outputDiv.innerHTML = 'Query completed, restarting from Query 0';
+                        outputDiv.innerHTML = '各房间信息保持不变>_<';
                         count = 0;
                     }
                 }
