@@ -66,4 +66,10 @@ public class FrontendController {
         List<DetailedFeesDO> frontendDetailFeesVO = frontendService.getDetailFees(idCard);
         return Results.success(frontendDetailFeesVO);
     }
+
+    @DeleteMapping("/frontend/exit")
+    public Result<Void> exit(@RequestParam String idCard) {
+         frontendService.exit(idCard);
+         return Results.success();
+    }
 }

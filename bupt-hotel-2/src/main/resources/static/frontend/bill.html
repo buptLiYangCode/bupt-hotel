@@ -55,7 +55,7 @@
     <tbody id="acBillTable"></tbody>
   </table>
 </div>
-
+<button onclick="exitRoom()">完成退房</button>
 <script>
   function getBill() {
     var form = document.getElementById("billForm");
@@ -135,6 +135,21 @@
       row.insertCell().textContent = acRecord.feeRate;
     });
     document.getElementById("acBillInfo").style.display = "block";
+  }
+  function exitRoom() {
+    var idCard = document.getElementById("idCard").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "http://localhost:8066/frontend/exit?idCard=" + idCard);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          alert("退房成功!");
+        } else {
+          alert("发生错误，请稍后再试。");
+        }
+      }
+    };
+    xhr.send();
   }
 </script>
 </body>

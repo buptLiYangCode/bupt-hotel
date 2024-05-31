@@ -15,6 +15,6 @@ public interface DetailedFeesMapper {
             "VALUES (#{acNumber}, #{windSpeed}, #{startTime}, #{endTime}, #{minutes}, #{fee}, #{feeRate})")
     void insert(DetailedFeesDO detailedFeesDO);
 
-    @Select("select * from t_detailed_fees where ac_number = #{acNumber}")
-    List<DetailedFeesDO> select(@Param("acNumber") String acNumber);
+    @Select("select * from t_detailed_fees where ac_number = #{acNumber} and start_time > #{startTime}")
+    List<DetailedFeesDO> select(@Param("acNumber") String acNumber, @Param("startTime") long startTime);
 }

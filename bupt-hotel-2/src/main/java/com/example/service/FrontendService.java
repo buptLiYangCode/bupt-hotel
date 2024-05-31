@@ -18,4 +18,6 @@ public interface FrontendService {
     List<DetailedFeesDO> getDetailFees(String idCard);
 
     boolean query();
+
+    void exit(String name);
 }

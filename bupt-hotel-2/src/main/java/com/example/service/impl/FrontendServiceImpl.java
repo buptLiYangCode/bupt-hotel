@@ -47,6 +47,13 @@ public class FrontendServiceImpl implements FrontendService {
         return false;
     }
 
+    @Override
+    public void exit(String idCard) {
+        UserDO userDO = userMapper.select(idCard);
+        userMapper.delete(idCard);
+        roomMapper.updateEmptyy(userDO.getRoomNumber(), true);
+    }
+
     /**
      * 后台将信息写入数据库
      *
@@ -116,7 +123,7 @@ public class FrontendServiceImpl implements FrontendService {
     public List<DetailedFeesDO> getDetailFees(String idCard) {
         UserDO userDO = userMapper.select(idCard);
         String acNumber = roomMapper.select(userDO.getRoomNumber()).getAcNumber();
-        List<DetailedFeesDO> detailedFeesDOS = detailedFeesMapper.select(acNumber);
+        List<DetailedFeesDO> detailedFeesDOS = detailedFeesMapper.select(acNumber, userDO.getCheckInTime());
         return mergeByStartTime(detailedFeesDOS);
     }
 

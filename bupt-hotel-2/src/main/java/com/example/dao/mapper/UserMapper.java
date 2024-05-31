@@ -15,4 +15,7 @@ public interface UserMapper {
 
     @Update("update t_user set check_out_time = #{checkOutTime} where id_card = #{idCard}")
     void update(@Param("idCard")String idCard, @Param("checkOutTime")long checkOutTime);
+
+    @Delete("delete from t_user where id_card = #{idCard}")
+    void delete(String idCard);
 }
